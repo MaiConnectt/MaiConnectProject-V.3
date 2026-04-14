@@ -63,8 +63,16 @@ try {
 
             if (!$resultado || !$resultado['success']) {
                 $msg = $resultado['message'] ?? 'Error desconocido en la base de datos';
-                if (strpos($msg, 'unique_documento') !== false || strpos($msg, '23505') !== false) {
-                    $msg = 'Ya existe un vendedor registrado con este número de documento.';
+                if (
+                    strpos($msg, 'unique_documento') !== false ||
+                    strpos($msg, '23505') !== false ||
+                    strpos($msg, 'numero_documento') !== false ||
+                    strpos($msg, 'unicidad') !== false ||
+                    strpos($msg, 'unique') !== false
+                ) {
+                    $msg = 'Ya existe un vendedor con ese número de documento. Verifica el número e intenta de nuevo.';
+                } elseif (strpos($msg, 'id_usuario_key') !== false || strpos($msg, 'email') !== false) {
+                    $msg = 'Ya existe una cuenta registrada con ese correo electrónico.';
                 }
                 throw new Exception($msg);
             }
@@ -111,8 +119,16 @@ try {
 
             if (!$resultado || !$resultado['success']) {
                 $msg = $resultado['message'] ?? 'Error desconocido al actualizar en base de datos';
-                if (strpos($msg, 'unique_documento') !== false || strpos($msg, '23505') !== false) {
-                    $msg = 'Ya existe un vendedor registrado con este número de documento.';
+                if (
+                    strpos($msg, 'unique_documento') !== false ||
+                    strpos($msg, '23505') !== false ||
+                    strpos($msg, 'numero_documento') !== false ||
+                    strpos($msg, 'unicidad') !== false ||
+                    strpos($msg, 'unique') !== false
+                ) {
+                    $msg = 'Ya existe un vendedor con ese número de documento. Verifica el número e intenta de nuevo.';
+                } elseif (strpos($msg, 'id_usuario_key') !== false || strpos($msg, 'email') !== false) {
+                    $msg = 'Ya existe una cuenta registrada con ese correo electrónico.';
                 }
                 throw new Exception($msg);
             }

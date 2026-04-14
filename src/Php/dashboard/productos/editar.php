@@ -146,7 +146,7 @@ if (!$product) {
                         <label class="form-label">Imagen del Producto (Opcional)</label>
                         <?php if (!empty($product['imagen_principal'])): ?>
                             <div style="margin-bottom: 10px;">
-                                <img src="<?= BASE_URL ?>/ <?php echo htmlspecialchars($product['imagen_principal']); ?>"
+                                <img src="<?= BASE_URL ?>/src/Php/<?php echo htmlspecialchars($product['imagen_principal']); ?>"
                                     alt="Imagen actual" style="max-width: 150px; border-radius: 8px;">
                                 <p style="font-size: 0.8rem; color: var(--gray-500); margin-top: 5px;">Sube una nueva foto
                                     para reemplazar la actual.</p>

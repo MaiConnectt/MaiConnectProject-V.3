@@ -24,21 +24,30 @@ document.addEventListener('DOMContentLoaded', function () {
                 datasets: [{
                     data: data.status.data,
                     backgroundColor: data.status.colors,
-                    borderWidth: 0
+                    borderWidth: 2,
+                    borderColor: '#ffffff',
+                    hoverOffset: 4
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                cutout: '70%',
-                plugins: { legend: { position: 'bottom' } }
+                cutout: '80%', // Dona más delgada y elegante
+                plugins: { 
+                    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } } 
+                }
             }
         });
     }
 
-    // 3. Top Productos
+    // 3. Top Productos (Barras Horizontales)
     const productsCtx = document.getElementById('productsChart');
     if (productsCtx && data.products) {
+        const ctx = productsCtx.getContext('2d');
+        const prodGradient = ctx.createLinearGradient(0, 0, 400, 0);
+        prodGradient.addColorStop(0, '#e8bdc4');
+        prodGradient.addColorStop(1, '#c97c89');
+
         new Chart(productsCtx, {
             type: 'bar',
             data: {
@@ -46,13 +55,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 datasets: [{
                     label: 'Unidades Vendidas',
                     data: data.products.map(p => p.total_sold),
-                    backgroundColor: '#e6c86e',
-                    borderRadius: 6
+                    backgroundColor: prodGradient,
+                    borderRadius: 8,
+                    maxBarThickness: 45,
+                    borderSkipped: false
                 }]
             },
             options: {
                 responsive: true,
                 indexAxis: 'y',
+                scales: {
+                    x: { grid: { borderDash: [4, 4] } },
+                    y: { grid: { display: false } }
+                },
                 plugins: { legend: { display: false } }
             }
         });
@@ -61,6 +76,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // 4. Ventas por Mes (Línea)
     const salesMonthCtx = document.getElementById('salesMonthChart');
     if (salesMonthCtx && data.salesMonth) {
+        const ctx = salesMonthCtx.getContext('2d');
+        const salesGradient = ctx.createLinearGradient(0, 0, 0, 400);
+        salesGradient.addColorStop(0, 'rgba(166, 92, 104, 0.4)');
+        salesGradient.addColorStop(1, 'rgba(166, 92, 104, 0.05)');
+
         new Chart(salesMonthCtx, {
             type: 'line',
             data: {
@@ -69,12 +89,15 @@ document.addEventListener('DOMContentLoaded', function () {
                     label: 'Ventas',
                     data: data.salesMonth.map(r => parseFloat(r.total_ventas)),
                     borderColor: '#a65c68',
-                    backgroundColor: 'rgba(166, 92, 104, 0.1)',
-                    borderWidth: 2,
+                    backgroundColor: salesGradient,
+                    borderWidth: 3,
                     tension: 0.4,
                     fill: true,
-                    pointBackgroundColor: '#a65c68',
-                    pointRadius: 4
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: '#a65c68',
+                    pointBorderWidth: 2,
+                    pointRadius: 5,
+                    pointHoverRadius: 7
                 }]
             },
             options: {
@@ -82,11 +105,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 maintainAspectRatio: false,
                 plugins: { legend: { display: false } },
                 scales: {
+                    x: { grid: { display: false } },
                     y: {
                         beginAtZero: true,
-                        ticks: {
-                            callback: val => '$' + val.toLocaleString('es-CO')
-                        }
+                        grid: { borderDash: [4, 4] },
+                        ticks: { callback: val => '$' + val.toLocaleString('es-CO') }
                     }
                 }
             }
@@ -96,6 +119,11 @@ document.addEventListener('DOMContentLoaded', function () {
     // 5. Vendedores por Universidad (Barras)
     const uniCtx = document.getElementById('uniChart');
     if (uniCtx && data.universities) {
+        const ctx = uniCtx.getContext('2d');
+        const uniGradient = ctx.createLinearGradient(0, 0, 0, 300);
+        uniGradient.addColorStop(0, 'rgba(201, 124, 137, 0.8)');
+        uniGradient.addColorStop(1, 'rgba(201, 124, 137, 0.2)');
+
         new Chart(uniCtx, {
             type: 'bar',
             data: {
@@ -103,16 +131,19 @@ document.addEventListener('DOMContentLoaded', function () {
                 datasets: [{
                     label: 'Vendedores',
                     data: data.universities.map(r => parseInt(r.total_vendedores)),
-                    backgroundColor: 'rgba(255, 107, 107, 0.75)',
-                    borderColor: 'rgba(255, 107, 107, 1)',
-                    borderWidth: 1,
-                    borderRadius: 6
+                    backgroundColor: uniGradient,
+                    borderColor: '#c97c89',
+                    borderWidth: 1.5,
+                    borderRadius: 8,
+                    maxBarThickness: 60,
+                    borderSkipped: false
                 }]
             },
             options: {
                 responsive: true,
                 scales: {
-                    y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true, ticks: { stepSize: 1 }, grid: { borderDash: [4, 4] } }
                 },
                 plugins: { legend: { display: false } }
             }

@@ -48,6 +48,31 @@
     box-shadow: 0 0 0 3px rgba(201, 124, 137, 0.1);
 }
 
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #fff;
+    padding: 1.5rem 2rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(201, 124, 137, 0.05);
+    margin-bottom: 2rem;
+    border: 1px solid rgba(201, 124, 137, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.header-actions::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    width: 15rem;
+    background: linear-gradient(90deg, transparent, rgba(201, 124, 137, 0.05));
+    pointer-events: none;
+}
+
 .filter-actions {
     display: flex;
     gap: var(--spacing-sm);
@@ -354,6 +379,46 @@
     cursor: not-allowed;
 }
 
+/* ==========================================================================
+   BADGES (ESTILOS FALTANTES QUE ARREGLAN LOS ESTADOS EN VER.PHP)
+   ========================================================================== */
+.badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 1rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.badge.pending {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+.badge.processing {
+    background: #e8f4fd;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.badge.completed {
+    background: #eafaea;
+    color: #1e7e34;
+    border: 1px solid #c3e6cb;
+}
+
+.badge.error {
+    background: #fdf3f4;
+    color: #c97c89;
+    border: 1px solid #fadce0;
+}
+
 /* ===== EMPTY STATE ===== */
 .empty-state {
     text-align: center;
@@ -613,42 +678,90 @@
 }
 
 .detail-card {
-    background: var(--white);
-    padding: var(--spacing-lg);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
+    background: #ffffff;
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(201, 124, 137, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    overflow: hidden;
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.detail-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 40px rgba(201, 124, 137, 0.08);
+}
+
+.detail-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--primary-color), var(--primary-dark));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.detail-card:hover::before {
+    opacity: 1;
 }
 
 .detail-card-title {
-    font-family: var(--font-heading);
-    font-size: 1.3rem;
-    color: var(--dark);
-    margin-bottom: var(--spacing-md);
-    padding-bottom: var(--spacing-sm);
-    border-bottom: 2px solid var(--accent-color);
+    font-size: 1.15rem;
+    color: var(--primary-dark);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(201, 124, 137, 0.15);
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.75rem;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+}
+
+.detail-card-title i {
+    color: var(--primary-color);
+    font-size: 1.1rem;
 }
 
 .info-row {
     display: flex;
     justify-content: space-between;
-    padding: 0.8rem 0;
-    border-bottom: 1px solid var(--gray-light);
+    align-items: unset;
+    padding: 0.75rem 0;
+    border-bottom: 1px dashed rgba(201, 124, 137, 0.15);
 }
 
 .info-row:last-child {
     border-bottom: none;
+    padding-bottom: 0;
 }
 
 .info-label {
     font-weight: 600;
-    color: var(--gray-dark);
+    color: #555;
+    width: 30%;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.info-label i {
+    color: var(--primary-color);
+    opacity: 0.7;
+    width: 16px;
+    text-align: center;
 }
 
 .info-value {
-    color: var(--gray);
+    color: #222;
+    font-weight: 500;
+    width: 70%;
 }
 
 .items-table {
@@ -733,16 +846,192 @@
     margin-bottom: var(--spacing-md);
 }
 
+/* Ocultar SOLO los elementos especiales de impresión (firmas y frase) en pantalla.
+   No oculta la información del vendedor ni los productos. */
+.print-only {
+    display: none !important;
+}
+
 @media print {
+    @page {
+        margin: 0.5cm;
+        size: A4 portrait;
+    }
+
+    /* ── Ocultar todo lo que no se imprime ── */
     .sidebar,
     .menu-toggle,
+    .no-print,
     .order-actions,
-    .btn-action-large {
+    .btn-action-large,
+    .alert-success,
+    nav, header, footer {
         display: none !important;
+    }
+
+    /* ── HABILITAR ELEMENTOS QUE SOLO SON DE IMPRESIÓN ── */
+    .print-only {
+        display: block !important;
+    }
+
+    /* ── El main ocupa toda la página sin márgenes ── */
+    html, body {
+        background: white !important;
+        font-size: 9pt !important;
+        color: #000 !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     .main-content {
         margin-left: 0 !important;
+        padding: 0.3cm !important;
+        box-shadow: none !important;
+    }
+
+    /* ── Grid de una sola columna ── */
+    .details-grid {
+        display: block !important;
+    }
+
+    /* ── Ocultar todas las cards por defecto ── */
+    .detail-card {
+        display: none !important;
+    }
+
+    /* ── Solo mostrar las marcadas como print-show ── */
+    .detail-card.print-show {
+        display: block !important;
+        box-shadow: none !important;
+        border: 1px solid #ccc !important;
+        border-radius: 6px !important;
+        padding: 0.4cm !important;
+        margin-bottom: 0.4cm !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    /* ── Encabezado de impresión compacto ── */
+    .main-content::before {
+        content: "Mai Connett — Resumen de Pedido";
+        display: block;
+        font-family: serif;
+        font-size: 13pt;
+        font-weight: bold;
+        color: #a65c68;
+        border-bottom: 1.5px solid #a65c68;
+        padding-bottom: 0.2cm;
+        margin-bottom: 0.3cm;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* ── Títulos de sección compactos ── */
+    .detail-card-title {
+        font-size: 10pt !important;
+        margin-bottom: 0.2cm !important;
+        padding-bottom: 0.15cm !important;
+        color: #000 !important;
+        border-bottom-color: #ccc !important;
+    }
+
+    /* ── Bloque para firmas al final de la página ── */
+    .signatures-wrapper {
+        display: flex !important;
+        justify-content: space-between !important;
+        margin-top: 3cm !important;
+        padding: 0 1cm !important;
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
+    }
+
+    .signature-block {
+        width: 42% !important;
+        text-align: center !important;
+    }
+
+    .signature-line {
+        border-bottom: 1.5px solid #000 !important;
+        height: 1.5cm !important; /* Espacio para que la persona firme */
+        margin-bottom: 0.3cm !important;
+    }
+
+    .signature-info {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 0.1cm !important;
+        font-size: 9pt !important;
+    }
+
+    .signature-name {
+        font-weight: bold !important;
+        color: #000 !important;
+        font-size: 10pt !important;
+    }
+
+    .signature-role {
+        color: #444 !important;
+    }
+
+    .signature-doc {
+        color: #666 !important;
+        font-size: 8.5pt !important;
+        margin-top: 0.1cm !important;
+    }
+
+    /* ── Frase motivacional ── */
+    .print-footer-quote {
+        display: block !important;
+        text-align: center;
+        margin-top: 2.5cm !important;
+        font-family: 'Times New Roman', serif;
+        font-style: italic;
+        color: #a65c68 !important;
+        font-size: 11pt !important;
+        font-weight: 500;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .print-footer-quote p {
+        margin: 0 0 0.2cm 0;
+    }
+
+    .print-footer-quote i {
+        font-size: 9pt !important;
+        color: #a65c68 !important;
+    }
+
+    /* ── Filas de info más compactas ── */
+    .info-row {
+        padding: 0.15cm 0 !important;
+        font-size: 9pt !important;
+    }
+
+    /* ── Tabla de productos compacta ── */
+    .items-table th,
+    .items-table td {
+        padding: 0.15cm 0.2cm !important;
+        font-size: 9pt !important;
+    }
+
+    .items-table th {
+        background: #f0eded !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    .total-row td {
+        font-size: 10pt !important;
+        color: #a65c68 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+
+    /* ── Forzar todo en una sola página ── */
+    * {
+        page-break-after: avoid !important;
+        break-after: avoid !important;
     }
 }
 

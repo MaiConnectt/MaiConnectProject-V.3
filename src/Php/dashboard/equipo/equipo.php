@@ -19,6 +19,7 @@ $offset = ($current_page - 1) * $records_per_page;
 // Parámetros de filtro
 $estado_filter = isset($_GET['estado']) ? $_GET['estado'] : '';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
+$uni_filter = isset($_GET['universidad']) ? trim($_GET['universidad']) : '';
 
 // Construir cláusula WHERE
 $where_conditions = [];
@@ -39,6 +40,11 @@ if (!empty($search)) {
     $params[] = $search_param;
     $params[] = $search_param;
     $params[] = $search_param;
+}
+
+if (!empty($uni_filter)) {
+    $where_conditions[] = "m.universidad = ?";
+    $params[] = $uni_filter;
 }
 
 $where_clause = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
@@ -94,6 +100,19 @@ try {
 } catch (PDOException $e) {
     $sellers = [];
     $error_message = "Error al cargar vendedores: " . $e->getMessage();
+}
+
+// Obtener universidades únicas para el filtro
+try {
+    $uni_query = "
+        SELECT DISTINCT universidad
+        FROM tbl_miembro
+        WHERE universidad IS NOT NULL AND universidad != '' AND estado != 'eliminado'
+        ORDER BY universidad ASC
+    ";
+    $universidades = $pdo->query($uni_query)->fetchAll(PDO::FETCH_COLUMN);
+} catch (PDOException $e) {
+    $universidades = [];
 }
 
 // Obtener estadísticas de resumen
@@ -200,13 +219,22 @@ require_once __DIR__ . '/../includes/head.php';
     <select name="estado" class="status-select" onchange="this.form.submit()">
         <option value="">Todos los estados</option>
         <option value="activo" <?php echo $estado_filter === 'activo' ? 'selected' : ''; ?>>Activos</option>
-        <option value="inactivo" <?php echo $estado_filter === 'inactivo' ? 'selected' : ''; ?>>Inactivos
-        </option>
-        <option value="eliminado" <?php echo $estado_filter === 'eliminado' ? 'selected' : ''; ?>>Eliminados
-        </option>
+        <option value="inactivo" <?php echo $estado_filter === 'inactivo' ? 'selected' : ''; ?>>Inactivos</option>
+        <option value="eliminado" <?php echo $estado_filter === 'eliminado' ? 'selected' : ''; ?>>Eliminados</option>
     </select>
 
-    <?php if (!empty($search) || !empty($estado_filter)): ?>
+    <?php if (!empty($universidades)): ?>
+    <select name="universidad" class="status-select" onchange="this.form.submit()">
+        <option value="">Todas las universidades</option>
+        <?php foreach ($universidades as $uni): ?>
+            <option value="<?php echo htmlspecialchars($uni); ?>" <?php echo $uni_filter === $uni ? 'selected' : ''; ?>>
+                <?php echo htmlspecialchars($uni); ?>
+            </option>
+        <?php endforeach; ?>
+    </select>
+    <?php endif; ?>
+
+    <?php if (!empty($search) || !empty($estado_filter) || !empty($uni_filter)): ?>
         <a href="equipo.php" class="btn-clear-filters">
             <i class="fas fa-times"></i> Limpiar
         </a>
@@ -324,21 +352,21 @@ require_once __DIR__ . '/../includes/head.php';
             </div>
             <div class="pagination-buttons">
                 <?php if ($current_page > 1): ?>
-                    <a href="?page=<?php echo $current_page - 1; ?><?php echo !empty($estado_filter) ? '&estado=' . $estado_filter : ''; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>"
+                    <a href="?page=<?php echo $current_page - 1; ?><?php echo !empty($estado_filter) ? '&estado=' . $estado_filter : ''; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?><?php echo !empty($uni_filter) ? '&universidad=' . urlencode($uni_filter) : ''; ?>"
                         class="btn-page">
                         <i class="fas fa-chevron-left"></i>
                     </a>
                 <?php endif; ?>
 
                 <?php for ($i = max(1, $current_page - 2); $i <= min($total_pages, $current_page + 2); $i++): ?>
-                    <a href="?page=<?php echo $i; ?><?php echo !empty($estado_filter) ? '&estado=' . $estado_filter : ''; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>"
+                    <a href="?page=<?php echo $i; ?><?php echo !empty($estado_filter) ? '&estado=' . $estado_filter : ''; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?><?php echo !empty($uni_filter) ? '&universidad=' . urlencode($uni_filter) : ''; ?>"
                         class="btn-page <?php echo $i === $current_page ? 'active' : ''; ?>">
                         <?php echo $i; ?>
                     </a>
                 <?php endfor; ?>
 
                 <?php if ($current_page < $total_pages): ?>
-                    <a href="?page=<?php echo $current_page + 1; ?><?php echo !empty($estado_filter) ? '&estado=' . $estado_filter : ''; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>"
+                    <a href="?page=<?php echo $current_page + 1; ?><?php echo !empty($estado_filter) ? '&estado=' . $estado_filter : ''; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?><?php echo !empty($uni_filter) ? '&universidad=' . urlencode($uni_filter) : ''; ?>"
                         class="btn-page">
                         <i class="fas fa-chevron-right"></i>
                     </a>

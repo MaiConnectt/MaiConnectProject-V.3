@@ -16,8 +16,28 @@ document.addEventListener('DOMContentLoaded', function() {
                 method: 'POST',
                 body: formData
             })
-                .then(res => res.json())
-                .then(data => {
+                .then(res => res.text())
+                .then(text => {
+                    let data;
+                    try {
+                        data = JSON.parse(text);
+                    } catch (e) {
+                        // Extract JSON if it was prepended with PHP Warnings like `<br /> <b>Warning</b>...`
+                        const match = text.match(/\{[\s\S]*\}/);
+                        if (match) {
+                            try {
+                                data = JSON.parse(match[0]);
+                            } catch (err) {
+                                throw new Error("Recibimos una advertencia del servidor y falló la lectura de datos.");
+                            }
+                        } else {
+                            if (text.includes("<b>Warning</b>") || text.includes("<b>Fatal error</b>")) {
+                                throw new Error("El servidor bloqueó la acción. (Posiblemente la imagen es muy grande o hay un problema de base de datos).");
+                            }
+                            throw new Error("El servidor devolvió un texto inesperado: " + text.substring(0, 80));
+                        }
+                    }
+
                     if (data.success) {
                         MaiModal.alert({
                             title: '¡Producto Creado!',

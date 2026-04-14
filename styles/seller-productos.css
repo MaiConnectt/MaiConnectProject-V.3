@@ -1,0 +1,316 @@
+/* =====================================================
+   SELLER — CATÁLOGO DE PRODUCTOS (Solo Lectura)
+   Archivo: styles/seller-productos.css
+   ===================================================== */
+
+/* ── Barra de búsqueda ── */
+.sp-search-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+}
+
+.sp-search-group {
+    position: relative;
+    flex: 1;
+    min-width: 220px;
+}
+
+.sp-search-group > i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400);
+    pointer-events: none;
+}
+
+.sp-search-input {
+    width: 100%;
+    padding: 0.75rem 2.75rem;
+    border: 2px solid var(--gray-200);
+    border-radius: 12px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.9375rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    background: white;
+    color: var(--gray-700);
+}
+
+.sp-search-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.12);
+}
+
+.sp-clear-btn {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400);
+    text-decoration: none;
+    transition: color 0.2s;
+}
+
+.sp-clear-btn:hover {
+    color: var(--danger);
+}
+
+/* ── Contador de resultados ── */
+.sp-result-count {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    margin-bottom: 1.5rem;
+}
+
+/* ── Mensaje de error ── */
+.sp-error-msg {
+    background: #fff0f0;
+    color: #c53030;
+    padding: 1rem 1.25rem;
+    border-radius: 10px;
+    border-left: 4px solid #c53030;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+/* ── Estado vacío ── */
+.sp-empty-state {
+    background: white;
+    border-radius: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    text-align: center;
+    padding: 4rem 2rem;
+}
+
+.sp-empty-icon {
+    width: 90px;
+    height: 90px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    color: var(--gray-300);
+}
+
+.sp-empty-state h3 {
+    font-family: 'Playfair Display', serif;
+    color: var(--gray-700);
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.sp-empty-state p {
+    color: var(--gray-500);
+    margin-bottom: 1.5rem;
+}
+
+/* ── Grilla de productos ── */
+.sp-products-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* ── Tarjeta de producto ── */
+.sp-product-card {
+    background: white;
+    border-radius: 18px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    border: 2px solid transparent;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    flex-direction: column;
+}
+
+.sp-product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 28px rgba(255, 107, 157, 0.15);
+    border-color: var(--primary);
+}
+
+/* ── Imagen de producto ── */
+.sp-product-image-wrap {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    background: var(--gray-100);
+}
+
+.sp-product-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s ease;
+}
+
+.sp-product-card:hover .sp-product-img {
+    transform: scale(1.05);
+}
+
+.sp-product-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #fce4ec 0%, #f8bbd9 100%);
+    font-size: 3.5rem;
+    color: var(--primary);
+    opacity: 0.5;
+}
+
+/* ── Badge de solo lectura ── */
+.sp-read-badge {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    background: rgba(0,0,0,0.5);
+    color: white;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.25rem 0.6rem;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    backdrop-filter: blur(4px);
+}
+
+/* ── Cuerpo de la tarjeta ── */
+.sp-product-body {
+    padding: 1.25rem;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.sp-product-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--gray-700);
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+}
+
+.sp-product-desc {
+    font-size: 0.8375rem;
+    color: var(--gray-500);
+    line-height: 1.6;
+    margin-bottom: auto;
+    padding-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.sp-no-desc {
+    font-style: italic;
+    opacity: 0.6;
+}
+
+/* ── Footer de la tarjeta ── */
+.sp-product-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-100);
+    margin-top: auto;
+}
+
+.sp-product-price {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary);
+    letter-spacing: -0.5px;
+}
+
+/* ── Botón de pedir ── */
+.sp-order-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.8125rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-shadow: 0 3px 10px rgba(255,107,157,0.25);
+    white-space: nowrap;
+}
+
+.sp-order-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(255,107,157,0.4);
+}
+
+/* ── Paginación ── */
+.sp-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 2rem;
+    padding-bottom: 1.5rem;
+}
+
+.sp-page-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: white;
+    color: var(--gray-700);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9375rem;
+    border: 2px solid var(--gray-200);
+    transition: all 0.2s ease;
+}
+
+.sp-page-btn:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.sp-page-btn.active {
+    background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+    color: white;
+    border-color: transparent;
+    box-shadow: 0 4px 12px rgba(255,107,157,0.3);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+    .sp-products-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .sp-search-bar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .sp-search-bar .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}

@@ -580,3 +580,266 @@
         width: 100%;
     }
 }
+
+/* =====================================================
+   FORM: EDITAR / NUEVO VENDEDOR
+   ===================================================== */
+
+/* Botón volver */
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #718096;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    margin-bottom: 1.75rem;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    background: white;
+    border: 1.5px solid #e2e8f0;
+    transition: all 0.2s ease;
+}
+
+.btn-back:hover {
+    color: #c97c89;
+    border-color: #c97c89;
+    background: #fff5f7;
+    transform: translateX(-3px);
+}
+
+/* Contenedor principal del formulario */
+.form-container {
+    max-width: 680px;
+    margin: 0 auto;
+    padding-bottom: 3rem;
+}
+
+/* Cabecera de página del formulario */
+.form-page-header {
+    max-width: 680px;
+    margin: 0 auto 2rem auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.form-page-header h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.75rem;
+    color: #2d3748;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin: 0;
+}
+
+.form-page-header h2 i {
+    color: #c97c89;
+}
+
+.form-page-header p {
+    color: #a0aec0;
+    font-size: 0.875rem;
+    margin: 0;
+    padding-left: 2.4rem;
+}
+
+/* Cabecera del formulario */
+.form-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.75rem;
+    color: #2d3748;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+/* Sección de la tarjeta del formulario */
+.form-card {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    border-left: 4px solid #c97c89;
+    transition: box-shadow 0.2s ease;
+}
+
+.form-card:hover {
+    box-shadow: 0 4px 20px rgba(201, 124, 137, 0.15);
+}
+
+.form-card-header {
+    padding: 1.25rem 1.75rem;
+    background: linear-gradient(135deg, #fff5f7 0%, #fde8ec 100%);
+    border-bottom: 1.5px solid #f7d5db;
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+.form-card-header i {
+    color: #c97c89;
+    font-size: 1rem;
+}
+
+.form-card-header span {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #7a4d5a;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.form-card-body {
+    padding: 1.75rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+/* Grid de dos columnas dentro del formulario */
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.form-row.col-1-2 {
+    grid-template-columns: 1fr 2fr;
+}
+
+/* Grupo de campo individual */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+/* Label */
+.form-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #4a5568;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.form-label .label-icon {
+    color: #c97c89;
+    font-size: 0.75rem;
+}
+
+/* Inputs, selects */
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid #e8d5d9;
+    border-radius: 12px;
+    font-size: 0.9375rem;
+    font-family: 'Poppins', sans-serif;
+    color: #2d3748;
+    background: #fdfafa;
+    transition: all 0.25s ease;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: #c97c89;
+    background: white;
+    box-shadow: 0 0 0 4px rgba(201, 124, 137, 0.12);
+}
+
+.form-control::placeholder {
+    color: #b0aab0;
+    font-style: italic;
+}
+
+select.form-control {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24'%3E%3Cpath fill='%23c97c89' d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 16px;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+/* Hint debajo del input */
+.form-hint {
+    font-size: 0.75rem;
+    color: #a0aec0;
+    margin-top: 0.1rem;
+}
+
+/* Badge de estado dentro del select */
+.status-badge-activo  { color: #22543d; }
+.status-badge-inactivo { color: #742a2a; }
+
+/* Botón guardar */
+.btn-submit {
+    width: 100%;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, #c97c89 0%, #a65c68 100%);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Poppins', sans-serif;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    box-shadow: 0 4px 16px rgba(201, 124, 137, 0.35);
+    transition: all 0.25s ease;
+    letter-spacing: 0.02em;
+    margin-top: 0.5rem;
+}
+
+.btn-submit:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(201, 124, 137, 0.45);
+}
+
+.btn-submit:active {
+    transform: translateY(0);
+}
+
+.btn-submit i {
+    font-size: 1rem;
+}
+
+/* Loading state */
+.btn-submit.loading {
+    opacity: 0.75;
+    pointer-events: none;
+}
+
+/* Separador visual entre cards */
+.form-section-gap {
+    margin-bottom: 0.25rem;
+}
+
+@media (max-width: 640px) {
+    .form-row,
+    .form-row.col-1-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .form-card-body {
+        padding: 1.25rem;
+    }
+
+    .form-title {
+        font-size: 1.4rem;
+    }
+}

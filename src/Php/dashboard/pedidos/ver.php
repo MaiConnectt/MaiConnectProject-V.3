@@ -14,6 +14,12 @@ require_once __DIR__ . '/../../config/helpers.php';
 // Obtener ID del pedido
 $order_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 
+// URL de regreso: si viene del perfil de un vendedor, volver ahí
+$seller_from = isset($_GET['seller_id']) ? (int) $_GET['seller_id'] : 0;
+$back_url = $seller_from
+    ? BASE_URL . '/src/Php/dashboard/equipo/ver.php?id=' . $seller_from
+    : 'pedidos.php';
+
 if (empty($order_id)) {
     header('Location: pedidos.php');
     exit;
@@ -112,23 +118,19 @@ include __DIR__ . '/../includes/sidebar.php';
                 </div>
             <?php endif; ?>
 
-            <!-- Encabezado del Pedido -->
-            <div class="order-header">
-                <div class="order-header-left">
-                    <h1>
-                        #<?php echo str_pad($order['id_pedido'], 4, '0', STR_PAD_LEFT); ?>
+            <div class="header-actions no-print">
+                <div>
+                    <h1 style="font-size: 2.2rem; color: var(--primary-dark); font-family: 'Playfair Display', serif; margin-bottom: 0.2rem; font-weight: 700;">
+                        <span style="color: var(--primary-color);">#</span><?php echo str_pad($order['id_pedido'], 4, '0', STR_PAD_LEFT); ?>
                     </h1>
-                    <div class="order-meta">
-                        <span><i class="fas fa-calendar"></i>
-                            <?php echo date('d/m/Y H:i', strtotime($order['fecha_creacion'])); ?>
-                        </span>
-                        <span><i class="fas fa-user-tag"></i> Vendedor:
-                            <?php echo htmlspecialchars($order['nombre_vendedor'] . ' ' . $order['apellido_vendedor']); ?>
-                        </span>
+                    <div style="font-size: 0.95rem; color: #666; display: flex; gap: 1rem; align-items: center; margin-top: 0.5rem;">
+                        <span><i class="far fa-calendar-alt"></i> <?php echo date('d/m/Y H:i', strtotime($order['fecha_creacion'])); ?></span>
+                        <span><i class="far fa-user"></i> Vendedor: <strong><?php echo htmlspecialchars($order['nombre_vendedor']); ?></strong></span>
                     </div>
                 </div>
-                <div class="order-actions">
-                    <a href="pedidos.php" class="btn-action-large secondary">
+                <!-- Botones de Acción - NO SE IMPRIMEN -->
+                <div class="order-actions" style="display: flex; gap: 1rem; align-items: center; z-index: 10;">
+                    <a href="<?php echo $back_url; ?>" class="btn-action-large secondary">
                         <i class="fas fa-arrow-left"></i> Volver
                     </a>
 
@@ -157,46 +159,33 @@ include __DIR__ . '/../includes/sidebar.php';
                 <!-- Columna Izquierda -->
                 <div>
                     <!-- Información del Vendedor -->
-                    <div class="detail-card" style="margin-bottom: var(--spacing-md);">
+                    <div class="detail-card print-show" style="margin-bottom: var(--spacing-md);">
                         <h2 class="detail-card-title">
                             <i class="fas fa-user-tie"></i> Información del Vendedor
                         </h2>
-                        <div class="info-row">
-                            <span class="info-label">Nombre:</span>
-                            <span class="info-value">
-                                <?php echo htmlspecialchars($order['nombre_vendedor'] . ' ' . $order['apellido_vendedor']); ?>
-                            </span>
+                                        <div class="info-row">
+                            <span class="info-label"><i class="fas fa-address-card"></i> Nombre:</span>
+                            <span class="info-value"><?php echo htmlspecialchars($order['nombre_vendedor'] . ' ' . $order['apellido_vendedor']); ?></span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">Email:</span>
-                            <span class="info-value">
-                                <?php echo htmlspecialchars($order['email_vendedor'] ?? 'No disponible'); ?>
-                            </span>
-                        </div>
-                        <!-- Contacto del Cliente (Secundario) -->
-                        <div class="info-row"
-                            style="margin-top: 1rem; border-top: 2px dashed var(--gray-light); padding-top: 1rem;">
-                            <span class="info-label">Teléfono Contacto:</span>
-                            <span class="info-value">
-                                <?php echo htmlspecialchars($order['telefono_contacto'] ?? 'N/A'); ?>
-                            </span>
+                            <span class="info-label"><i class="fas fa-envelope"></i> Email:</span>
+                            <span class="info-value"><?php echo htmlspecialchars($order['email_vendedor'] ?? 'No disponible'); ?></span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">Dirección (Entrega):</span>
-                            <span class="info-value">
-                                <?php echo htmlspecialchars($order['direccion_entrega'] ?? 'N/A'); ?>
-                            </span>
+                            <span class="info-label"><i class="fas fa-phone-alt"></i> Teléfono Contacto:</span>
+                            <span class="info-value"><?php echo htmlspecialchars($order['telefono_contacto'] ?? 'N/A'); ?></span>
                         </div>
                         <div class="info-row">
-                            <span class="info-label">Fecha Programada:</span>
-                            <span class="info-value">
-                                <?php echo date('d/m/Y', strtotime($order['fecha_entrega'])); ?>
-                            </span>
+                            <span class="info-label"><i class="fas fa-map-marker-alt"></i> Dirección (Entrega):</span>
+                            <span class="info-value"><?php echo htmlspecialchars($order['direccion_entrega'] ?? 'N/A'); ?></span>
                         </div>
-                    </div>
+                        <div class="info-row">
+                            <span class="info-label"><i class="far fa-calendar-check"></i> Fecha Programada:</span>
+                            <span class="info-value"><?php echo date('d/m/Y', strtotime($order['fecha_entrega'])); ?></span>
+                        </div>          </div>
 
                     <!-- Artículos del Pedido -->
-                    <div class="detail-card">
+                    <div class="detail-card print-show">
                         <h2 class="detail-card-title">
                             <i class="fas fa-cookie-bite"></i> Productos
                         </h2>
@@ -235,10 +224,38 @@ include __DIR__ . '/../includes/sidebar.php';
                             </tbody>
                         </table>
                     </div>
+
+                    <!-- Sección de Firmas - Solo Impresión -->
+                    <div class="print-only signatures-wrapper">
+                        <!-- Firma del Cliente -->
+                        <div class="signature-block">
+                            <div class="signature-line"></div>
+                            <div class="signature-info">
+                                <span class="signature-name">Firma del Cliente</span>
+                                <span class="signature-role">Recibido a Satisfacción</span>
+                                <span class="signature-doc">C.C: _____________________</span>
+                            </div>
+                        </div>
+                        <!-- Firma de Mai Connett / Despacho -->
+                        <div class="signature-block">
+                            <div class="signature-line"></div>
+                            <div class="signature-info">
+                                <span class="signature-name">Firma de Entrega</span>
+                                <span class="signature-role">Propietaria / Administradora</span>
+                                <span class="signature-doc">Mai Connett</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Frase Mai Connett - Solo Impresión -->
+                    <div class="print-only print-footer-quote">
+                        <p>"Cada vez más cerca de cumplir lo que sueñas"</p>
+                        <i class="fas fa-heart"></i>
+                    </div>
                 </div>
 
                 <!-- Columna Derecha -->
-                <div>
+                <div class="no-print">
                     <!-- Estado del Pedido -->
                     <div class="detail-card" style="margin-bottom: var(--spacing-md);">
                         <h2 class="detail-card-title">
@@ -343,7 +360,7 @@ include __DIR__ . '/../includes/sidebar.php';
                         </div>
                     <?php endif; ?>
 
-                    <!-- Historial del Pedido -->
+                    <!-- Historial del Pedido (Oculto permanentemente de la vista a solicitud)
                     <div class="detail-card">
                         <h2 class="detail-card-title">
                             <i class="fas fa-history"></i> Historial del Pedido
@@ -372,7 +389,9 @@ include __DIR__ . '/../includes/sidebar.php';
                                 </div>
                             <?php endforeach; ?>
                         </div>
+                        </div>
                     </div>
+                    -->
                 </div>
             </div>
         </main>

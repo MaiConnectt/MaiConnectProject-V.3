@@ -97,7 +97,15 @@ try {
         </a>
     </nav>
 
-    <a href="<?= BASE_URL ?>/src/Php/dashboard/logout.php" class="logout-btn">
+    <a href="<?= BASE_URL ?>/src/Php/dashboard/logout.php" class="logout-btn" 
+       onclick="event.preventDefault(); const logoutUrl = this.href; MaiModal.confirm({
+           title: 'Cerrar Sesión',
+           message: '¿Estás seguro de que deseas salir del sistema?',
+           confirmText: 'Sí, Salir',
+           cancelText: 'No, Volver',
+           type: 'danger',
+           onConfirm: () => { window.location.href = logoutUrl; }
+       });">
         <i class="fas fa-sign-out-alt"></i>
         <span>Cerrar Sesión</span>
     </a>

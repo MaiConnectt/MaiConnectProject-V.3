@@ -236,11 +236,11 @@ require_once __DIR__ . '/includes/head.php';
                                 }
 
                                 echo "<tr>";
-                                echo "<td>#" . str_pad($order['id_pedido'], 4, '0', STR_PAD_LEFT) . "</td>";
-                                echo "<td>" . htmlspecialchars(($order['nombre'] ?? 'Admin') . ' ' . ($order['apellido'] ?? '')) . "</td>";
-                                echo "<td>" . date('d/m/Y', strtotime($order['fecha_creacion'])) . "</td>";
-                                echo "<td>$" . number_format($order['total'] ?? 0, 0, ',', '.') . "</td>";
-                                echo "<td><span class='order-status " . ($order['estado'] == 1 ? 'pending' : $status_class) . "' " . ($order['estado'] == 1 ? "style='background:rgba(116, 235, 213, 0.2); color:#0cab9c;'" : "") . ">" . $status_text . "</span></td>";
+                                echo "<td><span style='font-weight: 600; color: #555;'>#" . str_pad($order['id_pedido'], 4, '0', STR_PAD_LEFT) . "</span></td>";
+                                echo "<td><div style='display:flex; align-items:center; gap:0.5rem;'><div style='width: 25px; height: 25px; border-radius: 50%; background: var(--accent-color); color: var(--primary-dark); display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold;'>" . strtoupper(substr($order['nombre'] ?? 'A', 0, 1)) . "</div>" . htmlspecialchars(($order['nombre'] ?? 'Admin') . ' ' . ($order['apellido'] ?? '')) . "</div></td>";
+                                echo "<td style='color: #777;'>" . date('d/m/Y', strtotime($order['fecha_creacion'])) . "</td>";
+                                echo "<td style='font-weight: 600;'>$" . number_format($order['total'] ?? 0, 0, ',', '.') . "</td>";
+                                echo "<td><span class='badge {$status_class}'>" . $status_text . "</span></td>";
                                 echo "</tr>";
                             }
                         }
@@ -261,8 +261,14 @@ require_once __DIR__ . '/includes/head.php';
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        const ctx = document.getElementById('uniChart');
-        if (ctx) {
+        const canvas = document.getElementById('uniChart');
+        if (canvas) {
+            const ctx = canvas.getContext('2d');
+            // Crear gradiente para las barras
+            const gradientBg = ctx.createLinearGradient(0, 0, 0, 300);
+            gradientBg.addColorStop(0, 'rgba(201, 124, 137, 0.8)');   // primary-color con opacidad
+            gradientBg.addColorStop(1, 'rgba(201, 124, 137, 0.2)');
+
             new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -270,10 +276,12 @@ require_once __DIR__ . '/includes/head.php';
                     datasets: [{
                         label: 'Vendedores',
                         data: <?php echo json_encode($data ?? []); ?>,
-                        backgroundColor: 'rgba(255, 107, 107, 0.7)',
-                        borderColor: 'rgba(255, 107, 107, 1)',
-                        borderWidth: 1,
-                        borderRadius: 6
+                        backgroundColor: gradientBg,
+                        borderColor: '#c97c89', // primary-color sólido
+                        borderWidth: 1.5,
+                        borderRadius: 8,        // Bordes más suaves
+                        borderSkipped: false,
+                        hoverBackgroundColor: '#c97c89'
                     }]
                 },
                 options: {

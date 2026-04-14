@@ -32,7 +32,9 @@ if ($estado_filter !== '') {
 }
 
 if (!empty($search)) {
-    $where_conditions[] = "o.telefono_contacto LIKE ?";
+    $where_conditions[] = "(o.telefono_contacto LIKE ? OR o.direccion_entrega LIKE ? OR CONCAT(u.nombre, ' ', u.apellido) LIKE ?)";
+    $params[] = "%$search%";
+    $params[] = "%$search%";
     $params[] = "%$search%";
 }
 
@@ -57,6 +59,8 @@ $where_clause = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_c
 $count_query = "
     SELECT COUNT(*) as total
     FROM tbl_pedido o
+    LEFT JOIN tbl_miembro m ON o.id_vendedor = m.id_miembro
+    LEFT JOIN tbl_usuario u ON m.id_usuario = u.id_usuario
     $where_clause
 ";
 
@@ -172,6 +176,7 @@ require_once __DIR__ . '/../includes/head.php';
                 <option value="0" <?php echo $estado_filter === '0' ? 'selected' : ''; ?>>Pendiente</option>
                 <option value="1" <?php echo $estado_filter === '1' ? 'selected' : ''; ?>>En Proceso</option>
                 <option value="2" <?php echo $estado_filter === '2' ? 'selected' : ''; ?>>Completado</option>
+                <option value="3" <?php echo $estado_filter === '3' ? 'selected' : ''; ?>>Cancelado</option>
             </select>
         </div>
 

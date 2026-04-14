@@ -7,15 +7,32 @@
  *            eliminar), gestionando también la subida de imágenes.
  * ===================================================================
  */
+ob_start(); // Start capturing output as early as possible
+
 require_once __DIR__ . '/../auth.php';
 require_once __DIR__ . '/../../config/conexion.php';
 require_once __DIR__ . '/../../config/helpers.php';
 
 header('Content-Type: application/json');
 
-if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    echo json_encode(['success' => false, 'message' => 'Método no permitido']);
+function sendJson($data) {
+    $unexpected_output = ob_get_clean();
+    if (!empty($unexpected_output)) {
+        // En lugar de romper el JSON, devolvemos el error o advertencia en el mensaje
+        $data['success'] = false;
+        $data['message'] = "Advertencia PHP oculta: " . strip_tags($unexpected_output) . " | Mensaje original: " . ($data['message'] ?? '');
+    }
+    echo json_encode($data);
     exit;
+}
+
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    sendJson(['success' => false, 'message' => 'Método no permitido']);
+}
+
+// Detectar si PHP vació el $_POST debido a un archivo que excede post_max_size
+if (empty($_POST) && isset($_SERVER['CONTENT_LENGTH']) && (int)$_SERVER['CONTENT_LENGTH'] > 0) {
+    sendJson(['success' => false, 'message' => 'El archivo de imagen es demasiado pesado y supera el límite permitido por el servidor. Por favor, sube una imagen más ligera (máx 2MB).']);
 }
 
 $action = $_POST['action'] ?? '';
@@ -38,7 +55,9 @@ try {
                 validarImagen($_FILES['imagen']);
                 $upload_dir = __DIR__ . '/../../uploads/productos/';
                 if (!is_dir($upload_dir)) {
-                    mkdir($upload_dir, 0777, true); // Crear directorio si no existe
+                    if (!@mkdir($upload_dir, 0777, true) && !is_dir($upload_dir)) {
+                        throw new Exception("No se pudo crear el directorio de imágenes.");
+                    }
                 }
 
                 $file_extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
@@ -56,7 +75,7 @@ try {
             $stmt = $pdo->prepare("INSERT INTO tbl_producto (id_producto, nombre_producto, descripcion, precio, estado, imagen_principal, fecha_creacion, fecha_actualizacion) VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)");
             $stmt->execute([$next_id, $nombre, $descripcion, $precio, $estado, $ruta_imagen]);
 
-            echo json_encode(['success' => true, 'message' => 'Producto creado exitosamente']);
+            sendJson(['success' => true, 'message' => 'Producto creado exitosamente']);
             break;
 
         case 'edit':
@@ -76,7 +95,9 @@ try {
                 validarImagen($_FILES['imagen']);
                 $upload_dir = __DIR__ . '/../../uploads/productos/';
                 if (!is_dir($upload_dir)) {
-                    mkdir($upload_dir, 0777, true);
+                    if (!@mkdir($upload_dir, 0777, true) && !is_dir($upload_dir)) {
+                        throw new Exception("No se pudo crear el directorio de imágenes.");
+                    }
                 }
 
                 $file_extension = strtolower(pathinfo($_FILES['imagen']['name'], PATHINFO_EXTENSION));
@@ -96,7 +117,7 @@ try {
                 $stmt->execute([$nombre, $descripcion, $precio, $estado, $id_producto]);
             }
 
-            echo json_encode(['success' => true, 'message' => 'Producto actualizado exitosamente']);
+            sendJson(['success' => true, 'message' => 'Producto actualizado exitosamente']);
             break;
 
         case 'delete':
@@ -128,7 +149,7 @@ try {
                 }
             }
 
-            echo json_encode(['success' => true, 'message' => 'Producto eliminado permanentemente de la base de datos']);
+            sendJson(['success' => true, 'message' => 'Producto eliminado permanentemente de la base de datos']);
             break;
 
         default:
@@ -136,10 +157,10 @@ try {
     }
 } catch (PDOException $e) {
     if ($e->getCode() == '23505') {
-        echo json_encode(['success' => false, 'message' => 'Ya existe un producto con ese nombre. Por favor usa un nombre diferente.']);
+        sendJson(['success' => false, 'message' => 'Ya existe un producto con ese nombre. Por favor usa un nombre diferente.']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Error de base de datos: ' . $e->getMessage()]);
+        sendJson(['success' => false, 'message' => 'Error de base de datos: ' . $e->getMessage()]);
     }
-} catch (Exception $e) {
-    echo json_encode(['success' => false, 'message' => $e->getMessage()]);
+} catch (Throwable $e) {
+    sendJson(['success' => false, 'message' => $e->getMessage()]);
 }

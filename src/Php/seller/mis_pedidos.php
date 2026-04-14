@@ -159,7 +159,7 @@ $pageTitle = 'Mis Pedidos';
                                                 <?php $nota = $order['nota_cancelacion'] ?? ''; ?>
                                                 <?php if (!empty($nota)): ?>
                                                     <button
-                                                        onclick="verNotaCancelacion(<?php echo $order['id_pedido']; ?>, <?php echo json_encode($nota, JSON_HEX_QUOT | JSON_HEX_APOS | JSON_HEX_TAG); ?>)"
+                                                        onclick="verNotaCancelacion(<?php echo $order['id_pedido']; ?>, <?php echo htmlspecialchars(json_encode($nota, JSON_HEX_APOS | JSON_HEX_TAG), ENT_QUOTES); ?>)"
                                                         class="btn btn-secondary"
                                                         style="padding: 0.25rem 0.5rem; font-size: 0.8rem; background:#fff3cd; color:#856404; border:1px solid #ffc107;"
                                                         title="Ver motivo de cancelación">
@@ -170,12 +170,6 @@ $pageTitle = 'Mis Pedidos';
                                                 <?php endif; ?>
                                             <?php else: ?>
                                                 <!-- Pedido activo: botones normales -->
-                                                <a href="https://wa.me/57<?php echo preg_replace('/[^0-9]/', '', $order['telefono_contacto']); ?>"
-                                                    target="_blank" class="btn btn-secondary"
-                                                    style="padding: 0.25rem 0.5rem; font-size: 0.8rem; background: #25D366; color: white; border: none;"
-                                                    title="WhatsApp">
-                                                    <i class="fab fa-whatsapp"></i>
-                                                </a>
 
                                                 <?php if ($order['estado_pago'] == 0 || $order['estado_pago'] == 3): ?>
                                                     <button

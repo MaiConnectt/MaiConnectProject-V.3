@@ -9,24 +9,23 @@
  */
 
 // Parámetros de conexión a la base de datos
-$host = '10.5.213.111';
+$host = 'localhost';
 $port = 5432;
-$dbname = 'db_evolution1';
-$user = 'mdavid';
-$password = '3205560180m';
+$dbname = 'MaiConnect';
+$user = 'postgres';
+$password = '3205560180';
 try {
     // Instanciar el objeto PDO para la conexión con PostgreSQL
     $pdo = new PDO(
         "pgsql:host=$host;port=$port;dbname=$dbname",
         $user,
         $password,
-    [
-        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Lanzar excepciones en errores
-        PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC // Obtener resultados como array asociativo por defecto
-    ]
-        );
-}
-catch (PDOException $e) {
+        [
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, // Lanzar excepciones en errores
+            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC // Obtener resultados como array asociativo por defecto
+        ]
+    );
+} catch (PDOException $e) {
     // Terminar la ejecución si falla la conexión
     die("ERROR DB: " . $e->getMessage());
 }
@@ -45,8 +44,7 @@ if (!defined('BASE_URL')) {
     $pos = strpos($script_name, '/src/Php/');
     if ($pos !== false) {
         $base_url = substr($script_name, 0, $pos);
-    }
-    else {
+    } else {
         // Si no está en src/Php, podríamos estar en index.php en la raíz
         $base_url = rtrim(dirname($script_name), '/\\');
         if ($base_url === '\\')

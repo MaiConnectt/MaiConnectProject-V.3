@@ -33,6 +33,10 @@ $pageTitle = $pageTitle ?? 'Dashboard';
     <?php if (!empty($extraStyles)): ?>
         <style><?= $extraStyles ?></style>
     <?php endif; ?>
+
+    <?php if (!empty($extraCss)): ?>
+        <link rel="stylesheet" href="<?= $extraCss ?>">
+    <?php endif; ?>
 </head>
 
 <body>

@@ -85,7 +85,37 @@ function getSalesByMonth($pdo)
         GROUP BY DATE_TRUNC('month', o.fecha_creacion)
         ORDER BY DATE_TRUNC('month', o.fecha_creacion) ASC
     ";
-    return $pdo->query($sql)->fetchAll();
+    $rows = $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+    // Indexar resultados reales por clave 'YYYY-MM'
+    $real = [];
+    foreach ($rows as $row) {
+        $real[$row['mes']] = $row;
+    }
+
+    // Crear los últimos 6 meses garantizados (con $0 si no hay ventas)
+    $months = [];
+    for ($i = 5; $i >= 0; $i--) {
+        $ts = strtotime("-$i months");
+        $key = date('Y-m', $ts);
+        // Etiqueta en español
+        $labels_es = [
+            'Jan' => 'Ene', 'Feb' => 'Feb', 'Mar' => 'Mar',
+            'Apr' => 'Abr', 'May' => 'May', 'Jun' => 'Jun',
+            'Jul' => 'Jul', 'Aug' => 'Ago', 'Sep' => 'Sep',
+            'Oct' => 'Oct', 'Nov' => 'Nov', 'Dec' => 'Dic'
+        ];
+        $label_en = date('M Y', $ts);
+        $label = strtr($label_en, $labels_es);
+
+        $months[] = [
+            'mes'          => $key,
+            'mes_label'    => $label,
+            'total_ventas' => isset($real[$key]) ? $real[$key]['total_ventas'] : 0,
+        ];
+    }
+
+    return $months;
 }
 
 /**
@@ -128,8 +158,8 @@ try {
 
 // Etiquetas de estado
 $status_map = [0 => 'Pendiente', 1 => 'En Proceso', 2 => 'Completado'];
-// Colores: Pendiente (Amarillo), Proceso (Azul), Completado (Verde)
-$color_map = [0 => '#e6c86e', 1 => '#74ebd5', 2 => '#20ba5a'];
+// Colores premium tono pastel
+$color_map = [0 => '#fcd34d', 1 => '#93c5fd', 2 => '#86efac'];
 
 // Prellenamos con 0 para garantizar que siempre aparezcan las 3 leyendas y colores, aunque no haya pedidos en ese estado
 $status_counts = [0 => 0, 1 => 0, 2 => 0];

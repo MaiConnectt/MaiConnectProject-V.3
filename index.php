@@ -21,7 +21,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800&family=Poppins:wght@300;400;500;600;700&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Poppins:wght@300;400;500;600;700&family=Dancing+Script:wght@600&display=swap"
         rel="stylesheet">
 
     <!-- Iconos Font Awesome: Librería para importar íconos gráficos (menús, iconos, etc.) -->
@@ -49,14 +49,12 @@
                 <a href="#inicio" class="nav-link">Inicio</a>
                 <a href="#nosotros" class="nav-link">Nosotros</a>
                 <a href="#productos" class="nav-link">Productos</a>
-                <a href="#galeria" class="nav-link">Galería</a>
                 <a href="#contacto" class="nav-link">Contacto</a>
 
                 <!-- Enlace real para ir a la pantalla de inicio de sesión de administrador/equipo -->
-                <a href="src/Php/login/login.php" class="nav-link" style="margin-left: 10px;">
-                    <i class="fas fa-user"></i> Iniciar Sesión
+                <a href="src/Php/login/login.php" class="btn btn-secondary" style="padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.9rem; margin-left: 15px;">
+                    <i class="fas fa-user" style="margin-right: 5px;"></i> Iniciar Sesión
                 </a>
-
             </div>
 
             <!-- Botón de menú hamburguesa: Solo visible en pantallas de celulares o dispositivos pequeños -->
@@ -72,30 +70,34 @@
     <header class="hero" id="inicio">
         <!-- Filtro semitransparente sobre la imagen de fondo para que el texto resalte y sea legible -->
         <div class="hero-overlay"></div>
-        
-        <!-- Contenedor central con el mensaje de bienvenida y la identidad de la marca -->
-        <div class="hero-content">
-            <h1 class="hero-title">
-                <span class="hero-subtitle">Bienvenido a</span>
-                <!-- Logotipo principal de la tienda -->
-                <img src="src/img/mai.png" alt="Mai Shop Logo" class="hero-logo-img">
+        <div class="container hero-content" style="z-index: 2; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 85vh; padding-top: 60px;">
+            <div class="hero-logo-container" style="margin-bottom: 25px;">
+                <img src="src/img/mai.png" alt="Logo Hero" class="hero-logo" style="width: 140px; filter: drop-shadow(0 4px 15px rgba(0,0,0,0.3));">
+            </div>
+            
+            <h1 class="hero-title" style="margin-bottom: 20px;">
+                <span class="motto-text" style="display:block; font-weight: 400; font-style: italic; font-size: clamp(2rem, 5vw, 4.2rem); line-height: 1.1; text-align: center; letter-spacing: 0.5px; color: #fff;">Repostería hecha con el corazón</span>
             </h1>
-            <p class="hero-description">
-                Endulzamos tus momentos especiales con repostería artesanal de la más alta calidad
+            
+            <p class="hero-description" style="max-width: 750px; font-size: clamp(1.1rem, 2.2vw, 1.5rem); opacity: 0.95; margin: 15px auto 35px; color: #fff; font-weight: 300; line-height: 1.5;">
+                Horneando momentos inolvidables con ingredientes naturales y mucho amor en toda ocasión.
             </p>
             
-            <!-- Llamado a la Acción (CTA): Botón principal que invita al cliente a ir directo a deslizar a ver el catálogo -->
             <div class="hero-buttons">
-                <a href="#productos" class="btn btn-primary">
-                    <i class="fas fa-cookie-bite"></i> Ver Productos
+                <a href="#productos" class="btn btn-primary" style="padding: 1.1rem 3rem; font-size: 1.2rem; border-radius: 50px; box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
+                    <i class="fas fa-cookie-bite" style="margin-right: 12px;"></i> Explorar el Menú
                 </a>
-
             </div>
         </div>
         
-        <!-- Guía visual (flecha animada) que le insinúa al usuario deslizar hacia abajo para ver más contenido -->
         <div class="scroll-indicator">
             <i class="fas fa-chevron-down"></i>
+        </div>
+
+        <div class="section-divider">
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" style="fill: var(--cream); height: 80px; width: 100%;">
+                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C54.66,106.31,118,103,173.34,91,228.67,79,271.39,70.52,321.39,56.44Z"></path>
+            </svg>
         </div>
     </header>
 
@@ -186,14 +188,7 @@
                         </div>
                     </div>
 
-                    <!-- Micro-sección para reclutamiento: Invita a estudiantes universitarios a unirse al equipo de ventas -->
-                    <div style="margin-top: 2rem; text-align: left;">
-                        <p style="margin-bottom: 0.5rem; color: var(--gray-dark); font-weight: 500;">¿Eres universitario
-                            y buscas ingresos extra?</p>
-                        <a href="src/Php/unete/unete.php" class="btn btn-primary">
-                            Sé parte del equipo <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
-                        </a>
-                    </div>
+
                 </div>
             </div>
         </div>
@@ -325,40 +320,6 @@
         </div>
     </section>
 
-    <!-- Sección de Galería: Un collage visual con los mejores trabajos para antojar a los visitantes -->
-    <section class="gallery" id="galeria">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-label">Galería</span>
-                <h2 class="section-title">Nuestras Creaciones</h2>
-                <p class="section-description">
-                    Cada producto es una obra de arte comestible
-                </p>
-            </div>
-
-            <!-- Cuadrícula de fotos que se agrupan ordenadamente estilo "mosaico" -->
-            <div class="gallery-grid">
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1562440499-64c9a111f713?w=600&q=80" alt="Galería 1">
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1557925923-cd4648e211a0?w=600&q=80" alt="Galería 2">
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1464349095431-e9a21285b5f3?w=600&q=80" alt="Galería 3">
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1563729784474-d77dbb933a9e?w=600&q=80" alt="Galería 4">
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1486427944299-d1955d23e34d?w=600&q=80" alt="Galería 5">
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1576618148400-f54bed99fcfd?w=600&q=80" alt="Galería 6">
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Sección de Testimonios: Muestra reseñas de clientes reales. Estrategia de prueba social para dar confianza -->
     <section class="testimonials">

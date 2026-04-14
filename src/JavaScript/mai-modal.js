@@ -42,8 +42,9 @@ const MaiModal = {
             });
 
             this.elements.confirmBtn?.addEventListener('click', () => {
+                const value = this.elements.promptInput ? this.elements.promptInput.value : null;
+                this.close(); // Siempre cierra primero
                 if (this.callbacks.onConfirm) {
-                    const value = this.elements.promptInput ? this.elements.promptInput.value : null;
                     this.callbacks.onConfirm(value);
                 }
             });

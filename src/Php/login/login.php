@@ -11,7 +11,7 @@ session_start();
 require_once __DIR__ . '/../config/conexion.php';
 
 // Habilitar modo de depuración (establecer en false en producción)
-define('DEBUG_MODE', true);
+define('DEBUG_MODE', false);
 
 // Generar token CSRF si no existe
 if (!isset($_SESSION['csrf_token'])) {
@@ -28,6 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if ($email === '' || $password === '') {
         $message = '⚠️ Email y contraseña son obligatorios';
+    } elseif (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $message = '❌ Error de seguridad (CSRF). Intente de nuevo.';
     } else {
         try {
             // ===============================================================
@@ -57,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             if (!$user) {
-                $message = '❌ Usuario no encontrado';
+                $message = '❌ Email o contraseña incorrectos';
             } else {
                 if (DEBUG_MODE) {
                     $debug_info[] = "Rol: {$user['nombre_rol']} (ID: {$user['id_rol']})";
@@ -74,7 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
 
                 if (!$password_valid) {
-                    $message = '❌ Contraseña incorrecta';
+                    $message = '❌ Email o contraseña incorrectos';
                 } else {
                     // ===============================================================
                     // Paso 3: Validaciones adicionales para roles específicos (VENDEDOR)
@@ -173,6 +175,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+// Prevenir caché para que no se muestren datos antiguos al volver atrás
+header("Cache-Control: no-cache, no-store, must-revalidate");
+header("Pragma: no-cache");
+header("Expires: 0");
 ?>
 
 <!DOCTYPE html>
@@ -217,10 +224,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="login-header">
             <i class="fas fa-birthday-cake"></i>
             <h2>Bienvenido</h2>
-            <p style="color: var(--gray);">Ingresa a tu cuenta Mai Shop</p>
+            <p>Ingresa a tu cuenta Mai Shop</p>
         </div>
 
-        <form method="POST" action="login.php">
+        <form method="POST" action="login.php" autocomplete="off">
             <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
 
             <div class="form-group">
@@ -228,7 +235,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="input-group">
                     <i class="fas fa-envelope"></i>
                     <input type="email" id="email" name="email" class="form-control" placeholder="ejemplo@correo.com"
-                        value="<?php echo htmlspecialchars($email ?? ''); ?>" required>
+                        value="<?php echo htmlspecialchars($email ?? ''); ?>" required autocomplete="off">
                 </div>
             </div>
 
@@ -237,7 +244,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="input-group">
                     <i class="fas fa-lock"></i>
                     <input type="password" id="password" name="password" class="form-control" placeholder="********"
-                        required>
+                        required autocomplete="off">
                 </div>
             </div>
 

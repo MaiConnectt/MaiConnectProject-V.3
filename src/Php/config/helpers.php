@@ -121,9 +121,15 @@ if (!function_exists('validarImagen')) {
         }
 
         // 4. Verificación estricta del tipo MIME contra su contenido real (Anti-malware/PHP injection)
-        $finfo = finfo_open(FILEINFO_MIME_TYPE);
-        $mime = finfo_file($finfo, $file['tmp_name']);
-        finfo_close($finfo);
+        if (function_exists('finfo_open')) {
+            $finfo = finfo_open(FILEINFO_MIME_TYPE);
+            $mime = finfo_file($finfo, $file['tmp_name']);
+            finfo_close($finfo);
+        } elseif (function_exists('mime_content_type')) {
+            $mime = mime_content_type($file['tmp_name']);
+        } else {
+            $mime = $image_info['mime'] ?? '';
+        }
 
         $allowed_mimes = ['image/jpeg', 'image/png', 'image/webp'];
         if (!in_array($mime, $allowed_mimes)) {

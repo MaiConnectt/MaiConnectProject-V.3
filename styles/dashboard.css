@@ -201,14 +201,15 @@ body {
 
 /* ===== HEADER ===== */
 .dashboard-header {
-    background: var(--white);
-    padding: var(--spacing-md);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
+    background: linear-gradient(135deg, #ffffff 0%, #fff8f9 100%);
+    padding: 2.5rem 2rem;
+    border-radius: 20px;
+    box-shadow: 0 4px 25px rgba(201, 124, 137, 0.04);
     margin-bottom: var(--spacing-md);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border: 1px solid rgba(201, 124, 137, 0.08);
 }
 
 .header-left h1 {
@@ -320,8 +321,9 @@ body {
 .stat-card {
     background: var(--white);
     padding: var(--spacing-md);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-sm);
+    border-radius: 18px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(201, 124, 137, 0.05);
     transition: all var(--transition-normal);
     position: relative;
     overflow: hidden;
@@ -332,14 +334,14 @@ body {
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
-    height: 100%;
+    width: 100%;
+    height: 4px; /* Ahora el borde es superior, se ve más premium */
     background: var(--gradient-primary);
 }
 
 .stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--shadow-md);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(201, 124, 137, 0.08);
 }
 
 .stat-header {
@@ -375,10 +377,11 @@ body {
 
 .stat-value {
     font-family: var(--font-heading);
-    font-size: 2rem;
-    color: var(--dark);
+    font-size: 2.2rem;
+    color: var(--primary-dark);
     font-weight: 700;
-    margin-bottom: 0.3rem;
+    margin-bottom: 0.2rem;
+    letter-spacing: -0.5px;
 }
 
 .stat-label {

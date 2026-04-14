@@ -31,7 +31,10 @@ function isActive($link)
             <i class="fas fa-home"></i>
             <span>Dashboard</span>
         </a>
-        <!-- Enlace de Productos ELIMINADO según solicitud -->
+        <a href="productos.php" class="nav-item <?php echo isActive('productos.php'); ?>">
+            <i class="fas fa-box-open"></i>
+            <span>Productos</span>
+        </a>
 
         <a href="nuevo_pedido.php" class="nav-item <?php echo isActive('nuevo_pedido.php'); ?>">
             <i class="fas fa-plus-circle"></i>
@@ -45,13 +48,18 @@ function isActive($link)
             <i class="fas fa-dollar-sign"></i>
             <span>Comisiones</span>
         </a>
-        <a href="perfil.php" class="nav-item <?php echo isActive('perfil.php'); ?>">
-            <i class="fas fa-user"></i>
-            <span>Mi Perfil</span>
-        </a>
+
     </nav>
 
-    <a href="<?= BASE_URL ?>/src/Php/dashboard/logout.php" class="logout-btn">
+    <a href="<?= BASE_URL ?>/src/Php/dashboard/logout.php" class="logout-btn" 
+       onclick="event.preventDefault(); const logoutUrl = this.href; MaiModal.confirm({
+           title: 'Cerrar Sesión',
+           message: '¿Estás seguro de que deseas salir del sistema?',
+           confirmText: 'Sí, Salir',
+           cancelText: 'No, Volver',
+           type: 'danger',
+           onConfirm: () => { window.location.href = logoutUrl; }
+       });">
         <i class="fas fa-sign-out-alt"></i>
         <span>Cerrar Sesión</span>
     </a>

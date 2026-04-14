@@ -36,80 +36,143 @@ require_once __DIR__ . '/../includes/head.php';
 ?>
 <?php include __DIR__ . '/../includes/sidebar.php'; ?>
 
-<main class="main-content">
+<main class="main-content" style="padding: 2rem 2rem;">
+    <div style="max-width:640px; margin:0 auto; width:100%;">
     <a href="equipo.php" class="btn-back"><i class="fas fa-arrow-left"></i> Volver al equipo</a>
 
-    <div class="form-container">
-        <h2 class="form-title"><i class="fas fa-edit" style="color: var(--primary);"></i> Editar Vendedor</h2>
+    <div class="form-page-header" style="max-width:100%; margin-bottom:1.75rem;">
+        <h2><i class="fas fa-user-edit"></i> Editar Vendedor</h2>
+        <p>Modifica la información de <?php echo htmlspecialchars($seller['nombre'] . ' ' . $seller['apellido']); ?></p>
+    </div>
 
+    <div class="form-container" style="max-width:100%; margin:0;">
         <form id="editForm">
             <input type="hidden" name="action" value="edit">
             <input type="hidden" name="id_miembro" value="<?php echo $seller['id_miembro']; ?>">
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                <div class="form-group">
-                    <label class="form-label">Nombre</label>
-                    <input type="text" name="nombre" class="form-control" required
-                        value="<?php echo htmlspecialchars($seller['nombre']); ?>">
+            <!-- SECCIÓN: Datos Personales -->
+            <div class="form-card">
+                <div class="form-card-header">
+                    <i class="fas fa-user"></i>
+                    <span>Datos Personales</span>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Apellido</label>
-                    <input type="text" name="apellido" class="form-control" required
-                        value="<?php echo htmlspecialchars($seller['apellido']); ?>">
+                <div class="form-card-body">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-signature label-icon"></i> Nombre
+                            </label>
+                            <input type="text" name="nombre" class="form-control" required
+                                placeholder="Ej. Juan"
+                                value="<?php echo htmlspecialchars($seller['nombre']); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-signature label-icon"></i> Apellido
+                            </label>
+                            <input type="text" name="apellido" class="form-control" required
+                                placeholder="Ej. Pérez"
+                                value="<?php echo htmlspecialchars($seller['apellido']); ?>">
+                        </div>
+                    </div>
+                    <div class="form-row col-1-2">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-id-card label-icon"></i> Tipo Documento
+                            </label>
+                            <select name="tipo_documento" class="form-control" disabled
+                                style="background:#f5f5f5; color:#888; cursor:not-allowed; opacity:0.8;">
+                                <option value="">Seleccionar</option>
+                                <option value="CC" <?php echo ($seller['tipo_documento'] ?? '') === 'CC' ? 'selected' : ''; ?>>Cédula de Ciudadanía</option>
+                                <option value="TI" <?php echo ($seller['tipo_documento'] ?? '') === 'TI' ? 'selected' : ''; ?>>Tarjeta de Identidad</option>
+                                <option value="CE" <?php echo ($seller['tipo_documento'] ?? '') === 'CE' ? 'selected' : ''; ?>>Cédula de Extranjería</option>
+                            </select>
+                            <!-- Preservar valor aunque esté disabled -->
+                            <input type="hidden" name="tipo_documento" value="<?php echo htmlspecialchars($seller['tipo_documento'] ?? ''); ?>">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-hashtag label-icon"></i> Número de Documento
+                                <span title="El número de documento no puede modificarse" style="margin-left:0.4rem;color:#c97c89;"><i class="fas fa-lock" style="font-size:0.75rem;"></i></span>
+                            </label>
+                            <input type="text" class="form-control" readonly
+                                value="<?php echo htmlspecialchars($seller['numero_documento'] ?? ''); ?>"
+                                style="background:#f5f5f5; color:#888; cursor:not-allowed;"
+                                title="La cédula no puede modificarse">
+                            <!-- Preservar valor en el submit -->
+                            <input type="hidden" name="numero_documento" value="<?php echo htmlspecialchars($seller['numero_documento'] ?? ''); ?>">
+                            <span class="form-hint" style="color:#c97c89;"><i class="fas fa-lock"></i> Este campo no puede modificarse</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 1rem;">
-                <div class="form-group">
-                    <label class="form-label">Tipo Documento</label>
-                    <select name="tipo_documento" class="form-control" required>
-                        <option value="">Seleccionar</option>
-                        <option value="CC" <?php echo ($seller['tipo_documento'] ?? '') === 'CC' ? 'selected' : ''; ?>>Cédula de Ciudadanía</option>
-                        <option value="TI" <?php echo ($seller['tipo_documento'] ?? '') === 'TI' ? 'selected' : ''; ?>>Tarjeta de Identidad</option>
-                        <option value="CE" <?php echo ($seller['tipo_documento'] ?? '') === 'CE' ? 'selected' : ''; ?>>Cédula de Extranjería</option>
-                    </select>
+            <!-- SECCIÓN: Contacto -->
+            <div class="form-card">
+                <div class="form-card-header">
+                    <i class="fas fa-address-book"></i>
+                    <span>Información de Contacto</span>
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Número de Documento</label>
-                    <input type="text" name="numero_documento" class="form-control" required maxlength="15"
-                        oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-                        value="<?php echo htmlspecialchars($seller['numero_documento'] ?? ''); ?>"
-                        placeholder="Número de identificación">
+                <div class="form-card-body">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-envelope label-icon"></i> Correo Electrónico
+                        </label>
+                        <input type="email" name="email" class="form-control" required
+                            placeholder="email@ejemplo.com"
+                            value="<?php echo htmlspecialchars($seller['email']); ?>">
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fab fa-whatsapp label-icon"></i> Teléfono / WhatsApp
+                            </label>
+                            <input type="tel" name="telefono" class="form-control" required
+                                maxlength="10" minlength="10"
+                                oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                                placeholder="3001234567"
+                                value="<?php echo htmlspecialchars($seller['telefono'] ?? ''); ?>">
+                            <span class="form-hint">10 dígitos sin espacios ni guiones</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-university label-icon"></i> Universidad
+                            </label>
+                            <input type="text" name="universidad" class="form-control"
+                                placeholder="Ej. Universidad Central"
+                                value="<?php echo htmlspecialchars($seller['universidad'] ?? ''); ?>">
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Correo Electrónico</label>
-                <input type="email" name="email" class="form-control" required
-                    value="<?php echo htmlspecialchars($seller['email']); ?>">
+            <!-- SECCIÓN: Configuración -->
+            <div class="form-card">
+                <div class="form-card-header">
+                    <i class="fas fa-sliders-h"></i>
+                    <span>Configuración</span>
+                </div>
+                <div class="form-card-body">
+                    <div class="form-group" style="max-width: 220px;">
+                        <label class="form-label">
+                            <i class="fas fa-toggle-on label-icon"></i> Estado de la Cuenta
+                        </label>
+                        <select name="estado" class="form-control">
+                            <option value="activo"   <?php echo $seller['estado'] === 'activo'   ? 'selected' : ''; ?>>✅ Activo</option>
+                            <option value="inactivo" <?php echo $seller['estado'] === 'inactivo' ? 'selected' : ''; ?>>⛔ Inactivo</option>
+                        </select>
+                    </div>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Teléfono / WhatsApp</label>
-                <input type="tel" name="telefono" class="form-control" required maxlength="10" minlength="10"
-                    oninput="this.value = this.value.replace(/[^0-9]/g, '');"
-                    value="<?php echo htmlspecialchars($seller['telefono'] ?? ''); ?>">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Universidad</label>
-                <input type="text" name="universidad" class="form-control"
-                    value="<?php echo htmlspecialchars($seller['universidad'] ?? ''); ?>"
-                    placeholder="Ej. Universidad Central">
-            </div>
-
-            <div class="form-group">
-                <label class="form-label">Estado</label>
-                <select name="estado" class="form-control">
-                    <option value="activo" <?php echo $seller['estado'] === 'activo' ? 'selected' : ''; ?>>Activo</option>
-                    <option value="inactivo" <?php echo $seller['estado'] === 'inactivo' ? 'selected' : ''; ?>>Inactivo</option>
-                </select>
-            </div>
-
-            <button type="submit" class="btn-submit">Guardar Cambios</button>
+            <button type="submit" class="btn-submit">
+                <i class="fas fa-save"></i> Guardar Cambios
+            </button>
         </form>
-    </div>
+    </div><!-- /form-container -->
+    </div><!-- /max-width wrapper -->
 </main>
+
 
 <script>
     document.getElementById('editForm').addEventListener('submit', function (e) {

@@ -2,165 +2,205 @@
 /**
  * ===================================================================
  * Archivo: productos.php (Seller)
- * Propósito: Catálogo de productos en modo lectura para los vendedores.
- *            Permite buscar productos y redirigir rápidamente al 
- *            formulario de "Nuevo Pedido" con un producto pre-seleccionado.
+ * Propósito: Catálogo de productos en modo SOLO LECTURA para vendedores.
+ *            Muestra los productos activos creados por el administrador
+ *            con foto, nombre, descripción y precio. Sin acciones de
+ *            edición ni eliminación.
  * ===================================================================
  */
 require_once __DIR__ . '/seller_auth.php';
+require_once __DIR__ . '/../config/helpers.php';
 
-// Parámetros de búsqueda y filtros
-$search = isset($_GET['search']) ? trim($_GET['search']) : '';
+// Parámetros de búsqueda y paginación
+$search         = isset($_GET['search']) ? trim($_GET['search']) : '';
 $records_per_page = 12;
-$current_page = isset($_GET['page']) ? (int) $_GET['page'] : 1;
-$offset = ($current_page - 1) * $records_per_page;
+$current_page   = isset($_GET['page']) ? max(1, (int) $_GET['page']) : 1;
+$offset         = ($current_page - 1) * $records_per_page;
 
-// Construir consulta
-$where_conditions = [];
-$params = [];
+// Construir WHERE
+$where_conditions = ["estado = 'activo'"];
+$params           = [];
 
 if (!empty($search)) {
-    $where_conditions[] = "product_name LIKE ?";
+    $where_conditions[] = "(nombre_producto ILIKE ? OR descripcion ILIKE ?)";
+    $params[] = "%$search%";
     $params[] = "%$search%";
 }
 
-$where_clause = !empty($where_conditions) ? 'WHERE ' . implode(' AND ', $where_conditions) : '';
+$where_clause = 'WHERE ' . implode(' AND ', $where_conditions);
 
-// Obtener total de productos
+// Total de productos para paginación
 try {
-    $count_query = "SELECT COUNT(*) as total FROM tbl_product $where_clause";
-    $count_stmt = $pdo->prepare($count_query);
+    $count_stmt = $pdo->prepare("SELECT COUNT(*) AS total FROM tbl_producto $where_clause");
     $count_stmt->execute($params);
-    $total_records = $count_stmt->fetch()['total'];
-    $total_pages = ceil($total_records / $records_per_page);
+    $total_records = (int) $count_stmt->fetch()['total'];
+    $total_pages   = max(1, (int) ceil($total_records / $records_per_page));
 } catch (PDOException $e) {
     $total_records = 0;
-    $total_pages = 0;
+    $total_pages   = 1;
 }
 
 // Obtener productos
 try {
-    $query = "
-        SELECT 
-            id_product,
-            product_name,
-            price,
-            description
-        FROM tbl_product
+    $stmt = $pdo->prepare("
+        SELECT
+            id_producto,
+            nombre_producto,
+            descripcion,
+            precio,
+            imagen_principal
+        FROM tbl_producto
         $where_clause
-        ORDER BY product_name ASC
+        ORDER BY nombre_producto ASC
         LIMIT $records_per_page OFFSET $offset
-    ";
-
-    $stmt = $pdo->prepare($query);
+    ");
     $stmt->execute($params);
     $products = $stmt->fetchAll();
 } catch (PDOException $e) {
-    $products = [];
-    $error_message = "Error al cargar productos: " . $e->getMessage();
+    $products      = [];
+    $error_message = "Error al cargar los productos.";
 }
-$pageTitle = 'Productos';
-$extraStyles = '
-    .products-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
-    .product-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.05); transition: all 0.3s ease; border: 2px solid transparent; }
-    .product-card:hover { transform: translateY(-4px); box-shadow: 0 8px 20px rgba(0,0,0,0.1); border-color: var(--primary); }
-    .product-image { width: 100%; height: 200px; background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%); display: flex; align-items: center; justify-content: center; font-size: 4rem; color: white; }
-    .product-info { padding: 1.5rem; }
-    .product-name { font-family: "Playfair Display", serif; font-size: 1.125rem; color: var(--gray-700); margin-bottom: 0.5rem; font-weight: 600; }
-    .product-description { font-size: 0.875rem; color: var(--gray-500); margin-bottom: 1rem; line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .product-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid var(--gray-100); }
-    .product-price { font-size: 1.5rem; font-weight: 700; color: var(--primary); }
-    .product-stock { font-size: 0.75rem; color: var(--gray-500); }
-    .product-stock.low { color: var(--danger); font-weight: 600; }
-    .search-bar { margin-bottom: 2rem; }
-    .search-input { width: 100%; max-width: 500px; padding: 0.875rem 1rem 0.875rem 2.75rem; border: 2px solid var(--gray-200); border-radius: 12px; font-size: 0.9375rem; transition: all 0.3s ease; }
-    .search-input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(255, 107, 157, 0.1); }
-    .search-group { position: relative; }
-    .search-group i { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--gray-400); }
-';
+
+$pageTitle   = 'Productos';
+$extraCss    = BASE_URL . '/styles/seller-productos.css';
 ?>
 <?php include __DIR__ . '/includes/header.php'; ?>
-            <div class="page-header">
-                <h1>Catálogo de Productos</h1>
-                <p>Explora nuestros productos disponibles</p>
-            </div>
 
-            <!-- Barra de Búsqueda -->
-            <div class="search-bar">
-                <form method="GET" action="productos.php">
-                    <div class="search-group">
-                        <i class="fas fa-search"></i>
-                        <input type="text" name="search" class="search-input" placeholder="Buscar productos..."
-                            value="<?php echo htmlspecialchars($search); ?>">
-                    </div>
-                </form>
-            </div>
+<?php if (!empty($extraCss)): ?>
+    <link rel="stylesheet" href="<?= $extraCss ?>">
+<?php endif; ?>
 
-            <?php if (isset($error_message)): ?>
-                <div style="color: #c53030; margin-bottom: 1.5rem; font-weight: 500;">
-                    <?php echo $error_message; ?>
-                </div>
-            <?php endif; ?>
+<div class="page-header">
+    <h1><i class="fas fa-box-open" style="color:var(--primary);font-size:1.6rem;"></i> Catálogo de Productos</h1>
+    <p>Consulta los productos disponibles del catálogo</p>
+</div>
 
-            <?php if (empty($products)): ?>
-                <div class="content-card" style="text-align: center; padding: 3rem;">
-                    <i class="fas fa-cookie-bite" style="font-size: 4rem; color: var(--gray-300); margin-bottom: 1rem;"></i>
-                    <h3>No se encontraron productos</h3>
-                    <p style="color: var(--gray-500);">Intenta con otra búsqueda</p>
-                </div>
-            <?php else: ?>
-                <div class="products-grid">
-                    <?php foreach ($products as $product): ?>
-                        <div class="product-card">
-                            <div class="product-image">
-                                <i class="fas fa-cookie-bite"></i>
-                            </div>
-                            <div class="product-info">
-                                <h3 class="product-name"><?php echo htmlspecialchars($product['product_name']); ?></h3>
+<!-- Barra de búsqueda -->
+<form method="GET" action="productos.php" class="sp-search-bar">
+    <div class="sp-search-group">
+        <i class="fas fa-search"></i>
+        <input
+            type="text"
+            name="search"
+            id="searchInput"
+            class="sp-search-input"
+            placeholder="Buscar por nombre o descripción..."
+            value="<?php echo htmlspecialchars($search); ?>"
+            autocomplete="off">
+        <?php if (!empty($search)): ?>
+            <a href="productos.php" class="sp-clear-btn" title="Limpiar búsqueda">
+                <i class="fas fa-times"></i>
+            </a>
+        <?php endif; ?>
+    </div>
+    <button type="submit" class="btn btn-primary">
+        <i class="fas fa-search"></i> Buscar
+    </button>
+</form>
 
-                                <?php if (!empty($product['description'])): ?>
-                                    <p class="product-description"><?php echo htmlspecialchars($product['description']); ?></p>
-                                <?php endif; ?>
+<!-- Contador de resultados -->
+<p class="sp-result-count">
+    <?php if (!empty($search)): ?>
+        <?= $total_records ?> resultado<?= $total_records !== 1 ? 's' : '' ?> para "<strong><?= htmlspecialchars($search) ?></strong>"
+    <?php else: ?>
+        <?= $total_records ?> producto<?= $total_records !== 1 ? 's' : '' ?> disponibles
+    <?php endif; ?>
+</p>
 
-                                <div class="product-footer">
-                                    <div>
-                                        <div class="product-price">
-                                            <?php echo formato_moneda($product['price']); ?>
-                                    </div>
-                                    <a href="nuevo_pedido.php?product=<?php echo $product['id_product']; ?>"
-                                        class="btn btn-primary" style="padding: 0.5rem 1rem; font-size: 0.875rem;">
-                                        <i class="fas fa-plus"></i>
-                                    </a>
-                                </div>
-                            </div>
+<?php if (isset($error_message)): ?>
+    <div class="sp-error-msg">
+        <i class="fas fa-exclamation-triangle"></i> <?= htmlspecialchars($error_message) ?>
+    </div>
+<?php endif; ?>
+
+<!-- Grilla de productos -->
+<?php if (empty($products)): ?>
+    <div class="sp-empty-state">
+        <div class="sp-empty-icon">
+            <i class="fas fa-cookie-bite"></i>
+        </div>
+        <h3>No se encontraron productos</h3>
+        <p><?= !empty($search) ? 'Intenta con otra palabra clave.' : 'Aún no hay productos en el catálogo.' ?></p>
+        <?php if (!empty($search)): ?>
+            <a href="productos.php" class="btn btn-secondary">
+                <i class="fas fa-times"></i> Limpiar búsqueda
+            </a>
+        <?php endif; ?>
+    </div>
+<?php else: ?>
+    <div class="sp-products-grid">
+        <?php foreach ($products as $product): ?>
+            <div class="sp-product-card">
+
+                <!-- Imagen -->
+                <div class="sp-product-image-wrap">
+                    <?php if (!empty($product['imagen_principal'])): ?>
+                        <img
+                            src="<?= BASE_URL ?>/src/Php/<?= htmlspecialchars($product['imagen_principal']) ?>"
+                            alt="<?= htmlspecialchars($product['nombre_producto']) ?>"
+                            class="sp-product-img"
+                            loading="lazy">
+                    <?php else: ?>
+                        <div class="sp-product-placeholder">
+                            <i class="fas fa-image"></i>
                         </div>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
 
-                <!-- Paginación -->
-                <?php if ($total_pages > 1): ?>
-                    <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem;">
-                        <?php if ($current_page > 1): ?>
-                            <a href="?page=<?php echo $current_page - 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>"
-                                class="btn btn-secondary">
-                                <i class="fas fa-chevron-left"></i>
-                            </a>
-                        <?php endif; ?>
+                <!-- Información -->
+                <div class="sp-product-body">
+                    <h3 class="sp-product-name">
+                        <?= htmlspecialchars($product['nombre_producto']) ?>
+                    </h3>
 
-                        <?php for ($i = max(1, $current_page - 2); $i <= min($total_pages, $current_page + 2); $i++): ?>
-                            <a href="?page=<?php echo $i; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>"
-                                class="btn <?php echo $i === $current_page ? 'btn-primary' : 'btn-secondary'; ?>">
-                                <?php echo $i; ?>
-                            </a>
-                        <?php endfor; ?>
+                    <?php if (!empty($product['descripcion'])): ?>
+                        <p class="sp-product-desc">
+                            <?= htmlspecialchars($product['descripcion']) ?>
+                        </p>
+                    <?php else: ?>
+                        <p class="sp-product-desc sp-no-desc">Sin descripción disponible.</p>
+                    <?php endif; ?>
 
-                        <?php if ($current_page < $total_pages): ?>
-                            <a href="?page=<?php echo $current_page + 1; ?><?php echo !empty($search) ? '&search=' . urlencode($search) : ''; ?>"
-                                class="btn btn-secondary">
-                                <i class="fas fa-chevron-right"></i>
-                            </a>
-                        <?php endif; ?>
+                    <div class="sp-product-footer">
+                        <span class="sp-product-price">
+                            <?= formato_moneda($product['precio']) ?>
+                        </span>
+                        <a href="nuevo_pedido.php?producto=<?= $product['id_producto'] ?>"
+                           class="sp-order-btn" title="Crear pedido con este producto">
+                            <i class="fas fa-cart-plus"></i> Pedir
+                        </a>
                     </div>
-                <?php endif; ?>
+                </div>
+
+            </div>
+        <?php endforeach; ?>
+    </div>
+
+    <!-- Paginación -->
+    <?php if ($total_pages > 1): ?>
+        <div class="sp-pagination">
+            <?php if ($current_page > 1): ?>
+                <a href="?page=<?= $current_page - 1 ?><?= !empty($search) ? '&search=' . urlencode($search) : '' ?>"
+                   class="sp-page-btn">
+                    <i class="fas fa-chevron-left"></i>
+                </a>
             <?php endif; ?>
+
+            <?php for ($i = max(1, $current_page - 2); $i <= min($total_pages, $current_page + 2); $i++): ?>
+                <a href="?page=<?= $i ?><?= !empty($search) ? '&search=' . urlencode($search) : '' ?>"
+                   class="sp-page-btn <?= $i === $current_page ? 'active' : '' ?>">
+                    <?= $i ?>
+                </a>
+            <?php endfor; ?>
+
+            <?php if ($current_page < $total_pages): ?>
+                <a href="?page=<?= $current_page + 1 ?><?= !empty($search) ? '&search=' . urlencode($search) : '' ?>"
+                   class="sp-page-btn">
+                    <i class="fas fa-chevron-right"></i>
+                </a>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+<?php endif; ?>
+
 <?php include __DIR__ . '/includes/footer.php'; ?>

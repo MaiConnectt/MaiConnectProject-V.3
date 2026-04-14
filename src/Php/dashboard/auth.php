@@ -68,4 +68,3 @@ if (isset($_SESSION['last_activity']) && (time() - $_SESSION['last_activity']) >
 
 // Actualizar tiempo de última actividad
 $_SESSION['last_activity'] = time();
-?>

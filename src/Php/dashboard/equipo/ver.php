@@ -90,7 +90,8 @@ require_once __DIR__ . '/../includes/head.php';
 ?>
 <?php include __DIR__ . '/../includes/sidebar.php'; ?>
 
-<main class="main-content">
+<main class="main-content" style="padding: 2rem 2.5rem;">
+
     <a href="equipo.php" class="btn-back"><i class="fas fa-arrow-left"></i> Volver al equipo</a>
 
     <?php if (isset($error)): ?>
@@ -99,139 +100,213 @@ require_once __DIR__ . '/../includes/head.php';
             <?php echo $error; ?>
         </div>
     <?php else: ?>
-        <div class="profile-header">
-            <div class="profile-avatar-large">
-                <?php echo strtoupper(substr($seller['nombre'], 0, 1) . substr($seller['apellido'], 0, 1)); ?>
-            </div>
-            <div class="profile-info">
-                <h1>
+
+    <!-- ===== HERO CARD ===== -->
+    <div style="
+        background: linear-gradient(135deg, #c97c89 0%, #a65c68 100%);
+        border-radius: 20px;
+        padding: 2.5rem;
+        margin-bottom: 1.75rem;
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(201,124,137,0.35);
+    ">
+        <!-- Círculo decorativo de fondo -->
+        <div style="position:absolute;right:-60px;top:-60px;width:240px;height:240px;border-radius:50%;background:rgba(255,255,255,0.07);"></div>
+        <div style="position:absolute;right:60px;bottom:-80px;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,0.05);"></div>
+
+        <!-- Avatar -->
+        <div style="
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.25);
+            backdrop-filter: blur(10px);
+            border: 3px solid rgba(255,255,255,0.5);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; font-weight: 700;
+            color: white;
+            flex-shrink: 0;
+            letter-spacing: 1px;
+        ">
+            <?php echo strtoupper(substr($seller['nombre'], 0, 1) . substr($seller['apellido'], 0, 1)); ?>
+        </div>
+
+        <!-- Info -->
+        <div style="flex:1; min-width:0;">
+            <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.35rem;">
+                <h1 style="font-family:'Playfair Display',serif; font-size:1.75rem; color:white; margin:0; font-weight:700;">
                     <?php echo htmlspecialchars($seller['nombre'] . ' ' . $seller['apellido']); ?>
                 </h1>
-                <div class="profile-meta">
-                    <div class="meta-item">
-                        <i class="fas fa-envelope"></i>
-                        <?php echo htmlspecialchars($seller['email']); ?>
-                    </div>
-                    <?php if (!empty($seller['telefono'])): ?>
-                        <div class="meta-item">
-                            <i class="fas fa-phone"></i>
-                            <?php echo htmlspecialchars($seller['telefono']); ?>
-                        </div>
-                    <?php endif; ?>
-                    <?php if (!empty($seller['universidad'])): ?>
-                        <div class="meta-item">
-                            <i class="fas fa-graduation-cap"></i>
-                            <?php echo htmlspecialchars($seller['universidad']); ?>
-                        </div>
-                    <?php endif; ?>
-                    <div class="meta-item">
-                        <i class="fas fa-calendar-alt"></i>
-                        Miembro desde:
-                        <?php echo date('d/m/Y', strtotime($seller['fecha_contratacion'])); ?>
-                    </div>
-                    <div class="meta-item">
-                        <span
-                            class="seller-status-badge <?php echo $seller['estado'] === 'activo' ? 'active' : 'inactive'; ?>">
-                            <?php echo ucfirst($seller['estado']); ?>
-                        </span>
-                    </div>
+                <span style="
+                    padding: 0.3rem 0.85rem;
+                    border-radius: 20px;
+                    font-size: 0.75rem;
+                    font-weight: 600;
+                    background: <?php echo $seller['estado'] === 'activo' ? 'rgba(198,246,213,0.9)' : 'rgba(254,215,215,0.9)'; ?>;
+                    color: <?php echo $seller['estado'] === 'activo' ? '#22543d' : '#742a2a'; ?>;
+                ">
+                    <?php echo $seller['estado'] === 'activo' ? '✅ Activo' : '⛔ Inactivo'; ?>
+                </span>
+            </div>
+
+            <div style="display:flex; flex-wrap:wrap; gap:1.25rem; color:rgba(255,255,255,0.88); font-size:0.875rem;">
+                <span><i class="fas fa-envelope" style="margin-right:0.4rem;opacity:0.8;"></i><?php echo htmlspecialchars($seller['email']); ?></span>
+                <?php if (!empty($seller['telefono'])): ?>
+                <span><i class="fas fa-phone" style="margin-right:0.4rem;opacity:0.8;"></i><?php echo htmlspecialchars($seller['telefono']); ?></span>
+                <?php endif; ?>
+                <?php if (!empty($seller['universidad'])): ?>
+                <span><i class="fas fa-graduation-cap" style="margin-right:0.4rem;opacity:0.8;"></i><?php echo htmlspecialchars($seller['universidad']); ?></span>
+                <?php endif; ?>
+                <span><i class="fas fa-calendar-alt" style="margin-right:0.4rem;opacity:0.8;"></i>Desde <?php echo date('d/m/Y', strtotime($seller['fecha_contratacion'])); ?></span>
+                <span><i class="fas fa-id-card" style="margin-right:0.4rem;opacity:0.8;"></i><?php echo htmlspecialchars($seller['tipo_documento'] ?? ''); ?> <?php echo htmlspecialchars($seller['numero_documento'] ?? ''); ?></span>
+            </div>
+        </div>
+
+        <!-- Botón Editar -->
+        <a href="editar.php?id=<?php echo $seller['id_miembro']; ?>" style="
+            display: inline-flex; align-items: center; gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(8px);
+            border: 1.5px solid rgba(255,255,255,0.4);
+            color: white;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            flex-shrink: 0;
+            white-space: nowrap;
+        " onmouseover="this.style.background='rgba(255,255,255,0.3)'" onmouseout="this.style.background='rgba(255,255,255,0.2)'">
+            <i class="fas fa-edit"></i> Editar
+        </a>
+    </div>
+
+    <!-- ===== STATS ===== -->
+    <div style="display:grid; grid-template-columns:repeat(4,1fr); gap:1.25rem; margin-bottom:1.75rem;">
+
+        <div style="background:white; border-radius:16px; padding:1.5rem; box-shadow:0 2px 12px rgba(0,0,0,0.06); border-top:4px solid #c97c89;">
+            <div style="display:flex; align-items:center; gap:1rem;">
+                <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#f9e4e8,#f5c6ce);display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-shopping-bag" style="color:#c97c89;font-size:1.25rem;"></i>
+                </div>
+                <div>
+                    <div style="font-size:1.75rem;font-weight:700;color:#2d3748;line-height:1;"><?php echo $seller['total_orders']; ?></div>
+                    <div style="font-size:0.8rem;color:#a0aec0;margin-top:0.2rem;">Pedidos Completados</div>
                 </div>
             </div>
-            <div class="profile-actions">
-                <a href="editar.php?id=<?php echo $seller['id_miembro']; ?>" class="btn-profile-action edit">
-                    <i class="fas fa-edit"></i> Editar
-                </a>
+        </div>
+
+        <div style="background:white; border-radius:16px; padding:1.5rem; box-shadow:0 2px 12px rgba(0,0,0,0.06); border-top:4px solid #48bb78;">
+            <div style="display:flex; align-items:center; gap:1rem;">
+                <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#c6f6d5,#9ae6b4);display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-dollar-sign" style="color:#276749;font-size:1.25rem;"></i>
+                </div>
+                <div>
+                    <div style="font-size:1.5rem;font-weight:700;color:#2d3748;line-height:1;">$<?php echo number_format($seller['total_sales'] ?? 0, 0, ',', '.'); ?></div>
+                    <div style="font-size:0.8rem;color:#a0aec0;margin-top:0.2rem;">Ventas Totales</div>
+                </div>
             </div>
         </div>
 
-        <div class="stats-grid-large">
-            <div class="stat-card-large">
-                <i class="fas fa-shopping-cart"></i>
-                <span class="value">
-                    <?php echo $seller['total_orders']; ?>
-                </span>
-                <span class="label">Pedidos Completados</span>
-            </div>
-            <div class="stat-card-large">
-                <i class="fas fa-dollar-sign"></i>
-                <span class="value">$
-                    <?php echo number_format($seller['total_sales'] ?? 0, 0, ',', '.'); ?>
-                </span>
-                <span class="label">Ventas Totales</span>
-            </div>
-            <div class="stat-card-large">
-                <i class="fas fa-wallet"></i>
-                <span class="value">$
-                    <?php echo number_format($seller['total_commissions_earned'] ?? 0, 0, ',', '.'); ?>
-                </span>
-                <span class="label">Comisiones Generadas</span>
-            </div>
-            <div class="stat-card-large" style="border-bottom: 4px solid var(--primary-color);">
-                <i class="fas fa-clock"></i>
-                <span class="value" style="color: var(--primary-color);">$
-                    <?php echo number_format($seller['balance_pending'] ?? 0, 0, ',', '.'); ?>
-                </span>
-                <span class="label">Saldo Pendiente</span>
+        <div style="background:white; border-radius:16px; padding:1.5rem; box-shadow:0 2px 12px rgba(0,0,0,0.06); border-top:4px solid #667eea;">
+            <div style="display:flex; align-items:center; gap:1rem;">
+                <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#ebf4ff,#c3dafe);display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-wallet" style="color:#434190;font-size:1.25rem;"></i>
+                </div>
+                <div>
+                    <div style="font-size:1.5rem;font-weight:700;color:#2d3748;line-height:1;">$<?php echo number_format($seller['total_commissions_earned'] ?? 0, 0, ',', '.'); ?></div>
+                    <div style="font-size:0.8rem;color:#a0aec0;margin-top:0.2rem;">Comisiones Generadas</div>
+                </div>
             </div>
         </div>
 
-        <div class="orders-card">
-            <h2 class="card-title"><i class="fas fa-history"></i> Pedidos Recientes</h2>
-            <div class="table-responsive">
-                <table class="orders-table">
-                    <thead>
+        <div style="background:white; border-radius:16px; padding:1.5rem; box-shadow:0 2px 12px rgba(0,0,0,0.06); border-top:4px solid #ed8936;">
+            <div style="display:flex; align-items:center; gap:1rem;">
+                <div style="width:48px;height:48px;border-radius:12px;background:linear-gradient(135deg,#feebc8,#fbd38d);display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-clock" style="color:#c05621;font-size:1.25rem;"></i>
+                </div>
+                <div>
+                    <div style="font-size:1.5rem;font-weight:700;color:#c05621;line-height:1;">$<?php echo number_format($seller['balance_pending'] ?? 0, 0, ',', '.'); ?></div>
+                    <div style="font-size:0.8rem;color:#a0aec0;margin-top:0.2rem;">Saldo Pendiente</div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ===== TABLA DE PEDIDOS ===== -->
+    <div style="background:white; border-radius:20px; box-shadow:0 2px 12px rgba(0,0,0,0.06); overflow:hidden;">
+        <div style="padding:1.5rem 1.75rem; border-bottom:1px solid #f0e4e6; display:flex; align-items:center; gap:0.75rem;">
+            <div style="width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#f9e4e8,#f5c6ce);display:flex;align-items:center;justify-content:center;">
+                <i class="fas fa-history" style="color:#c97c89;font-size:0.9rem;"></i>
+            </div>
+            <h2 style="font-family:'Playfair Display',serif; font-size:1.25rem; color:#2d3748; margin:0;">Pedidos Recientes</h2>
+            <span style="margin-left:auto; background:#f9e4e8; color:#c97c89; padding:0.3rem 0.75rem; border-radius:20px; font-size:0.8rem; font-weight:600;">
+                <?php echo count($orders); ?> pedidos
+            </span>
+        </div>
+
+        <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse;">
+                <thead>
+                    <tr style="background:#fdf8f9;">
+                        <th style="text-align:left; padding:1rem 1.75rem; font-size:0.75rem; font-weight:600; color:#a78b8f; text-transform:uppercase; letter-spacing:0.05em;">ID</th>
+                        <th style="text-align:left; padding:1rem 1rem; font-size:0.75rem; font-weight:600; color:#a78b8f; text-transform:uppercase; letter-spacing:0.05em;">Fecha</th>
+                        <th style="text-align:left; padding:1rem 1rem; font-size:0.75rem; font-weight:600; color:#a78b8f; text-transform:uppercase; letter-spacing:0.05em;">Teléfono / Dirección</th>
+                        <th style="text-align:left; padding:1rem 1rem; font-size:0.75rem; font-weight:600; color:#a78b8f; text-transform:uppercase; letter-spacing:0.05em;">Total</th>
+                        <th style="text-align:left; padding:1rem 1rem; font-size:0.75rem; font-weight:600; color:#a78b8f; text-transform:uppercase; letter-spacing:0.05em;">Estado</th>
+                        <th style="text-align:center; padding:1rem 1.75rem; font-size:0.75rem; font-weight:600; color:#a78b8f; text-transform:uppercase; letter-spacing:0.05em;">Ver</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($orders)): ?>
                         <tr>
-                            <th>ID</th>
-                            <th>Fecha</th>
-                            <th>Cliente/Dirección</th>
-                            <th>Total</th>
-                            <th>Estado</th>
-                            <th>Acción</th>
+                            <td colspan="6" style="text-align:center; padding:3rem; color:#a0aec0;">
+                                <i class="fas fa-inbox" style="font-size:2.5rem; display:block; margin-bottom:0.75rem; opacity:0.4;"></i>
+                                Sin pedidos registrados
+                            </td>
                         </tr>
-                    </thead>
-                    <tbody>
-                        <?php if (empty($orders)): ?>
-                            <tr>
-                                <td colspan="6" style="text-align: center; padding: 3rem; color: var(--gray-400);">
-                                    No hay pedidos registrados para este vendedor.
-                                </td>
-                            </tr>
-                        <?php else: ?>
-                            <?php foreach ($orders as $order): ?>
-                                <tr>
-                                    <td>#
-                                        <?php echo str_pad($order['id_pedido'], 4, '0', STR_PAD_LEFT); ?>
-                                    </td>
-                                    <td>
-                                        <?php echo date('d/m/Y', strtotime($order['fecha_creacion'])); ?>
-                                    </td>
-                                    <td>
-                                        <div style="font-weight: 600;">
-                                            <?php echo htmlspecialchars($order['telefono_contacto']); ?>
-                                        </div>
-                                        <div style="font-size: 0.8rem; color: var(--gray-500);">
-                                            <?php echo htmlspecialchars($order['direccion_entrega']); ?>
-                                        </div>
-                                    </td>
-                                    <td style="font-weight: 700;">$
-                                        <?php echo number_format($order['monto_total'] ?? 0, 0, ',', '.'); ?>
-                                    </td>
-                                    <td>
-                                        <?php echo getStatusBadge($order['estado']); ?>
-                                    </td>
-                                    <td>
-                                        <a href="<?= BASE_URL ?>/src/Php/dashboard/pedidos/ver.php?id=<?php echo $order['id_pedido']; ?>"
-                                            class="btn-view-order" title="Ver pedido">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        <?php endif; ?>
-                    </tbody>
-                </table>
-            </div>
+                    <?php else: ?>
+                        <?php foreach ($orders as $i => $order): ?>
+                        <tr style="border-top:1px solid #faf0f2; <?php echo $i % 2 === 0 ? '' : 'background:#fdfbfb;'; ?> transition:background 0.15s;"
+                            onmouseover="this.style.background='#fdf2f4'" onmouseout="this.style.background='<?php echo $i % 2 === 0 ? 'white' : '#fdfbfb'; ?>'">
+                            <td style="padding:1rem 1.75rem; font-weight:600; color:#c97c89; font-size:0.9rem;">
+                                #<?php echo str_pad($order['id_pedido'], 4, '0', STR_PAD_LEFT); ?>
+                            </td>
+                            <td style="padding:1rem; color:#718096; font-size:0.875rem;">
+                                <?php echo date('d/m/Y', strtotime($order['fecha_creacion'])); ?>
+                            </td>
+                            <td style="padding:1rem;">
+                                <div style="font-weight:600; color:#2d3748; font-size:0.9rem;"><?php echo htmlspecialchars($order['telefono_contacto']); ?></div>
+                                <div style="font-size:0.78rem; color:#a0aec0; margin-top:0.15rem;"><?php echo htmlspecialchars($order['direccion_entrega']); ?></div>
+                            </td>
+                            <td style="padding:1rem; font-weight:700; color:#2d3748; font-size:0.95rem;">
+                                $<?php echo number_format($order['monto_total'] ?? 0, 0, ',', '.'); ?>
+                            </td>
+                            <td style="padding:1rem;">
+                                <?php echo getStatusBadge($order['estado']); ?>
+                            </td>
+                            <td style="padding:1rem 1.75rem; text-align:center;">
+                                <a href="<?= BASE_URL ?>/src/Php/dashboard/pedidos/ver.php?id=<?php echo $order['id_pedido']; ?>&seller_id=<?php echo $seller_id; ?>"
+                                    style="width:34px;height:34px;border-radius:8px;background:#f0f4ff;color:#667eea;display:inline-flex;align-items:center;justify-content:center;text-decoration:none;transition:all 0.2s;"
+                                    title="Ver pedido"
+                                    onmouseover="this.style.background='#667eea';this.style.color='white';"
+                                    onmouseout="this.style.background='#f0f4ff';this.style.color='#667eea';">
+                                    <i class="fas fa-eye" style="font-size:0.85rem;"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
         </div>
+    </div>
+
     <?php endif; ?>
 </main>
 
