@@ -66,6 +66,8 @@ try {
 
                 if (move_uploaded_file($_FILES['imagen']['tmp_name'], $destination)) {
                     $ruta_imagen = 'uploads/productos/' . $new_filename;
+                } else {
+                    throw new Exception("No se pudo guardar la imagen. El servidor no tiene permisos de escritura en la carpeta de imágenes. Contacta al administrador del servidor.");
                 }
             }
 
@@ -106,6 +108,8 @@ try {
 
                 if (move_uploaded_file($_FILES['imagen']['tmp_name'], $destination)) {
                     $ruta_imagen = 'uploads/productos/' . $new_filename;
+                } else {
+                    throw new Exception("No se pudo guardar la imagen. El servidor no tiene permisos de escritura en la carpeta de imágenes. Contacta al administrador del servidor.");
                 }
             }
 

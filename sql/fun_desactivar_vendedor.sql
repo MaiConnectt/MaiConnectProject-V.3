@@ -11,7 +11,7 @@ BEGIN
     -- 1. Aplicar Eliminación Lógica (Soft Delete) en tabla miembro
     UPDATE tbl_miembro 
     SET estado = 'eliminado', 
-        id_estado_miembro = 0, 
+        id_estado_miembro = 2, 
         fecha_eliminacion = CURRENT_DATE 
     WHERE id_miembro = p_id_miembro;
 

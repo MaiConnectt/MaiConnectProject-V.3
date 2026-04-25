@@ -8,12 +8,32 @@
  * ===================================================================
  */
 
-// Parámetros de conexión a la base de datos
-$host = 'localhost';
-$port = 5432;
-$dbname = 'MaiConnect';
-$user = 'postgres';
-$password = '3205560180';
+// Cargar credenciales desde el archivo .env (3 niveles arriba: config → Php → src → raíz)
+$env_path = realpath(__DIR__ . '/../../../.env');
+if (!$env_path || !file_exists($env_path)) {
+    die('ERROR: No se encontró el archivo .env. Verifica que exista en la raíz del proyecto.');
+}
+
+// Lector de .env propio: soporta comentarios con # y valores con = en ellos
+$env = [];
+foreach (file($env_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $linea) {
+    $linea = trim($linea);
+    // Ignorar líneas vacías y comentarios (# o ;)
+    if ($linea === '' || $linea[0] === '#' || $linea[0] === ';') continue;
+    // Separar solo en el PRIMER '=' para permitir valores con '=' dentro
+    $pos = strpos($linea, '=');
+    if ($pos === false) continue;
+    $clave = trim(substr($linea, 0, $pos));
+    $valor = trim(substr($linea, $pos + 1));
+    $env[$clave] = $valor;
+}
+
+// Parámetros de conexión leídos del .env
+$host     = $env['DB_HOST']     ?? 'localhost';
+$port     = $env['DB_PORT']     ?? 5432;
+$dbname   = $env['DB_NAME']     ?? '';
+$user     = $env['DB_USER']     ?? '';
+$password = $env['DB_PASSWORD'] ?? '';
 try {
     // Instanciar el objeto PDO para la conexión con PostgreSQL
     $pdo = new PDO(

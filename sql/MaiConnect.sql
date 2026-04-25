@@ -5,6 +5,7 @@ DROP VIEW IF EXISTS vw_vendedores_por_universidad;
 DROP VIEW IF EXISTS vw_comisiones_vendedor;
 DROP VIEW IF EXISTS vw_totales_pedido;
 
+
 -- Tablas de relación y logs (hojas finales)
 DROP TABLE IF EXISTS tbl_sesion_usuario;
 DROP TABLE IF EXISTS tbl_log_sistema;
@@ -68,11 +69,6 @@ CREATE TABLE tbl_permiso (
     nombre_permiso  VARCHAR                NOT NULL UNIQUE       -- Nombre técnico del permiso
 );
 
--- Tipos de movimientos en inventario (Entrada/Salida)
-CREATE TABLE tbl_tipo_movimiento_stock (
-    id_tipo_movimiento DECIMAl(1,0)     CHECK(id_tipo_movimiento >=1 and id_tipo_movimiento <6) PRIMARY KEY,
-    nombre_tipo     VARCHAR                 NOT NULL UNIQUE
-);
 
 
 -- Métodos de pago permitidos
@@ -113,7 +109,8 @@ CREATE TABLE tbl_miembro (
     id_universidad  INTEGER           REFERENCES tbl_universidad(id_universidad),
     tipo_documento  VARCHAR(5),                               -- CC, CE, TI, etc.
     numero_documento VARCHAR(20)      UNIQUE,                 -- Número de identificación
-    fecha_contratacion DATE           DEFAULT CURRENT_DATE    -- Fecha de vinculación
+    fecha_contratacion DATE           DEFAULT CURRENT_DATE,   -- Fecha de vinculación
+    fecha_eliminacion  DATE                                   -- Fecha de eliminación lógica (Soft Delete)
 );
 
 -- Catálogo de productos disponibles para la venta
@@ -204,15 +201,7 @@ CREATE TABLE tbl_tipo_cancelacion (
     descripcion     VARCHAR            NOT NULL              -- Descripción (ej. No había stock)
 );
 
--- Kardex / Control de inventario histórico
-CREATE TABLE tbl_movimiento_stock (
-    id_movimiento   INTEGER            PRIMARY KEY,          -- Registro de movimiento
-    id_producto     INTEGER            NOT NULL REFERENCES tbl_producto(id_producto),
-    id_tipo_movimiento INTEGER         REFERENCES tbl_tipo_movimiento_stock(id_tipo_movimiento),
-    cantidad        INTEGER            NOT NULL,             -- Unidades (+ entrada, - salida)
-    fecha           TIMESTAMP          DEFAULT CURRENT_TIMESTAMP,
-    usuario_id      INTEGER            REFERENCES tbl_usuario(id_usuario) -- Quien hizo el ajuste
-);
+
 
 -- Trazabilidad de cambios sensibles en tablas (CRUD audit)
 CREATE TABLE tbl_auditoria (
@@ -280,7 +269,7 @@ INSERT INTO tbl_estado_miembro (id_estado_miembro, nombre_estado) VALUES
 (1, 'Activo'), (2, 'Inactivo'), (3, 'Suspendido');
 
 INSERT INTO tbl_usuario (id_usuario, nombre, apellido, email, contrasena, id_rol) VALUES
-(1, 'Admin', 'Sistema', 'admin@maishop.com', '$2y$10$cnwQTD8nHIx2Z1qIUrCaouWcDtyyoVkGzE4TNfXlrByIgLUSV5/0S', 1),
+(1, 'Admin', 'Sistema', 'maisena.adso1@gmail.com', '$2y$10$cnwQTD8nHIx2Z1qIUrCaouWcDtyyoVkGzE4TNfXlrByIgLUSV5/0S', 1),
 (2, 'Juan', 'Pérez', 'vendedor@maishop.com', '$2y$10$mXYW56m2us6UIU/d7l36Supd193Puln2wsHbk8Jzqpbq.xb25L2lK', 2);
 
 INSERT INTO tbl_miembro (id_miembro, id_usuario, porcentaje_comision, universidad, telefono, estado, id_estado_miembro) 
@@ -291,42 +280,9 @@ INSERT INTO tbl_producto (id_producto, nombre_producto, descripcion, precio) VAL
 (2, 'Cupcakes de Fresa', 'Decorados con crema natural', 5000.00);
 
 -- 6. VISTAS
+-- Las vistas están definidas en un archivo separado: sql/views.sql
+-- Ejecutar views.sql después de este script para crearlas/actualizarlas.
 
-CREATE OR REPLACE VIEW vw_vendedores_por_universidad AS
-SELECT 
-    u.nombre_universidad, 
-    COUNT(m.id_miembro) AS total_vendedores
-FROM tbl_universidad u
-LEFT JOIN tbl_miembro m ON m.id_universidad = u.id_universidad
-WHERE m.estado != 'eliminado'
-GROUP BY u.nombre_universidad
-ORDER BY total_vendedores DESC;
-
-CREATE OR REPLACE VIEW vw_totales_pedido AS
-SELECT 
-    p.id_pedido, p.id_vendedor, p.telefono_contacto, p.direccion_entrega, p.fecha_entrega, 
-    p.fecha_creacion, p.estado, p.estado_pago, p.notas,
-    COALESCE(SUM(dp.cantidad * dp.precio_unitario), 0) AS total
-FROM tbl_pedido p
-LEFT JOIN tbl_detalle_pedido dp ON p.id_pedido = dp.id_pedido AND dp.estado = 'activo'
-WHERE p.estado_logico = 'activo'
-GROUP BY p.id_pedido, p.id_vendedor, p.telefono_contacto, p.direccion_entrega, p.fecha_entrega, 
-         p.fecha_creacion, p.estado, p.estado_pago, p.notas;
-
-CREATE OR REPLACE VIEW vw_comisiones_vendedor AS
-SELECT 
-    m.id_miembro, u.nombre, u.apellido, u.email, m.universidad, m.telefono, m.porcentaje_comision, m.estado, m.fecha_contratacion,
-    COUNT(DISTINCT CASE WHEN o.estado != 3 THEN o.id_pedido END) AS total_pedidos,
-    COALESCE(SUM(CASE WHEN o.estado = 2 THEN ot.total ELSE 0 END), 0) AS total_ventas,
-    COALESCE(SUM(CASE WHEN o.estado = 2 THEN ot.total * m.porcentaje_comision / 100 ELSE 0 END), 0) AS total_comisiones_ganadas,
-    COALESCE(SUM(CASE WHEN o.estado = 2 AND o.id_pago_comision IS NOT NULL THEN o.monto_comision ELSE 0 END), 0) AS total_pagado,
-    COALESCE(SUM(CASE WHEN o.estado = 2 AND o.id_pago_comision IS NULL THEN o.monto_comision ELSE 0 END), 0) AS saldo_pendiente
-FROM tbl_miembro m
-JOIN tbl_usuario u ON m.id_usuario = u.id_usuario
-LEFT JOIN tbl_pedido o ON m.id_miembro = o.id_vendedor AND o.estado_logico = 'activo'
-LEFT JOIN vw_totales_pedido ot ON o.id_pedido = ot.id_pedido
-WHERE m.estado = 'activo'
-GROUP BY m.id_miembro, u.nombre, u.apellido, u.email, m.universidad, m.telefono, m.porcentaje_comision, m.estado, m.fecha_contratacion;
 
 -- 7. ÍNDICES Y TRIGGERS
 

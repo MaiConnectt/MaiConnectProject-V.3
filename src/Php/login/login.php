@@ -251,6 +251,18 @@ header("Expires: 0");
             <button type="submit" class="btn-submit">
                 Ingresar <i class="fas fa-arrow-right" style="margin-left: 0.5rem;"></i>
             </button>
+
+            <!-- Link de recuperación de contraseña -->
+            <div style="text-align:center; margin-top: 1.5rem;">
+                <a href="<?= BASE_URL ?>/src/Php/login/recuperar.php"
+                   style="color:var(--gray); font-size:1rem; text-decoration:none;
+                          transition: color 0.2s; font-weight:500;"
+                   onmouseover="this.style.color='var(--primary-color)'"
+                   onmouseout="this.style.color='var(--gray)'">
+                    <i class="fas fa-key" style="margin-right:0.4rem; opacity:0.7;"></i>
+                    ¿Olvidaste tu contraseña?
+                </a>
+            </div>
         </form>
 
         <a href="<?= BASE_URL ?>/index.php" class="back-link">

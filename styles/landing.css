@@ -306,7 +306,10 @@ a {
     right: 0;
     bottom: 0;
     /* Foto de galletas con chispas de chocolate (proporcionada) */
-    background: url('../src/img/cookies_hero.jpg') center/cover;
+    background-image: url('../src/img/cookies_hero.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
     opacity: 1;
     z-index: 0;
     animation: zoomIn 20s ease-in-out infinite alternate;

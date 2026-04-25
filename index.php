@@ -13,7 +13,7 @@
     <!-- Descripción de la página (útil para el SEO y resultados de búsqueda en Google) -->
     <meta name="description"
         content="Mai Shop - Repostería artesanal de alta calidad. Tortas, cupcakes, galletas y más delicias hechas con amor.">
-    
+
     <!-- Título de la pestaña en el navegador -->
     <title>Mai Shop - Repostería Artesanal</title>
 
@@ -30,7 +30,7 @@
         crossorigin="anonymous" referrerpolicy="no-referrer">
 
     <!-- Hoja de estilos principal de la landing page (v=2.6 evita mantener cargar caché antiguo) -->
-    <link rel="stylesheet" href="styles/landing.css?v=2.6">
+    <link rel="stylesheet" href="styles/landing.css?v=2.8">
 </head>
 
 
@@ -38,7 +38,7 @@
     <!-- Navegación: Barra superior que permite al usuario moverse por el sitio web -->
     <nav class="navbar" id="navbar">
         <div class="nav-container">
-            
+
             <!-- Logo de la tienda -->
             <div class="logo">
                 <img src="src/img/mai.png" alt="Mai Shop" style="height: 50px; width: auto;">
@@ -52,7 +52,8 @@
                 <a href="#contacto" class="nav-link">Contacto</a>
 
                 <!-- Enlace real para ir a la pantalla de inicio de sesión de administrador/equipo -->
-                <a href="src/Php/login/login.php" class="btn btn-secondary" style="padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.9rem; margin-left: 15px;">
+                <a href="src/Php/login/login.php" class="btn btn-secondary"
+                    style="padding: 0.5rem 1.2rem; border-radius: 50px; font-size: 0.9rem; margin-left: 15px;">
                     <i class="fas fa-user" style="margin-right: 5px;"></i> Iniciar Sesión
                 </a>
             </div>
@@ -70,33 +71,42 @@
     <header class="hero" id="inicio">
         <!-- Filtro semitransparente sobre la imagen de fondo para que el texto resalte y sea legible -->
         <div class="hero-overlay"></div>
-        <div class="container hero-content" style="z-index: 2; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 85vh; padding-top: 60px;">
+        <div class="container hero-content"
+            style="z-index: 2; position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 85vh; padding-top: 60px;">
             <div class="hero-logo-container" style="margin-bottom: 25px;">
-                <img src="src/img/mai.png" alt="Logo Hero" class="hero-logo" style="width: 140px; filter: drop-shadow(0 4px 15px rgba(0,0,0,0.3));">
+                <img src="src/img/mai.png" alt="Logo Hero" class="hero-logo"
+                    style="width: 140px; filter: drop-shadow(0 4px 15px rgba(0,0,0,0.3));">
             </div>
-            
+
             <h1 class="hero-title" style="margin-bottom: 20px;">
-                <span class="motto-text" style="display:block; font-weight: 400; font-style: italic; font-size: clamp(2rem, 5vw, 4.2rem); line-height: 1.1; text-align: center; letter-spacing: 0.5px; color: #fff;">Repostería hecha con el corazón</span>
+                <span class="motto-text"
+                    style="display:block; font-weight: 400; font-style: italic; font-size: clamp(2rem, 5vw, 4.2rem); line-height: 1.1; text-align: center; letter-spacing: 0.5px; color: #fff;">Repostería
+                    hecha con el corazón</span>
             </h1>
-            
-            <p class="hero-description" style="max-width: 750px; font-size: clamp(1.1rem, 2.2vw, 1.5rem); opacity: 0.95; margin: 15px auto 35px; color: #fff; font-weight: 300; line-height: 1.5;">
+
+            <p class="hero-description"
+                style="max-width: 750px; font-size: clamp(1.1rem, 2.2vw, 1.5rem); opacity: 0.95; margin: 15px auto 35px; color: #fff; font-weight: 300; line-height: 1.5;">
                 Horneando momentos inolvidables con ingredientes naturales y mucho amor en toda ocasión.
             </p>
-            
+
             <div class="hero-buttons">
-                <a href="#productos" class="btn btn-primary" style="padding: 1.1rem 3rem; font-size: 1.2rem; border-radius: 50px; box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
+                <a href="#productos" class="btn btn-primary"
+                    style="padding: 1.1rem 3rem; font-size: 1.2rem; border-radius: 50px; box-shadow: 0 8px 25px rgba(0,0,0,0.2);">
                     <i class="fas fa-cookie-bite" style="margin-right: 12px;"></i> Explorar el Menú
                 </a>
             </div>
         </div>
-        
+
         <div class="scroll-indicator">
             <i class="fas fa-chevron-down"></i>
         </div>
 
         <div class="section-divider">
-            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120" preserveAspectRatio="none" style="fill: var(--cream); height: 80px; width: 100%;">
-                <path d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C54.66,106.31,118,103,173.34,91,228.67,79,271.39,70.52,321.39,56.44Z"></path>
+            <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"
+                preserveAspectRatio="none" style="fill: var(--cream); height: 80px; width: 100%;">
+                <path
+                    d="M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V120H0V95.8C54.66,106.31,118,103,173.34,91,228.67,79,271.39,70.52,321.39,56.44Z">
+                </path>
             </svg>
         </div>
     </header>
@@ -105,7 +115,7 @@
     <section class="features">
         <!-- Contenedor que agrupa las tarjetas de ventajas, centrándolas y organizándolas en la pantalla -->
         <div class="container">
-            
+
             <!-- Primera ventaja: Calidad (Usa el ícono de una medalla) -->
             <div class="feature-card">
                 <div class="feature-icon">
@@ -207,7 +217,7 @@
 
             <!-- Cuadrícula dinámica para mostrar productos; se adapta desde 1 columna en celulares hasta 3 en PC -->
             <div class="products-grid">
-                
+
                 <!-- Tarjeta de Producto: Contiene foto, título, precio básico y un Call to Action (CTA) hacia WhatsApp -->
                 <div class="product-card">
                     <div class="product-image">
@@ -331,7 +341,7 @@
 
             <!-- Cuadrícula que organiza las tarjetas de reseñas de los clientes -->
             <div class="testimonials-grid">
-                
+
                 <!-- Tarjeta individual: Contiene 5 estrellas ficticias (o reales), el comentario y quién lo dijo -->
                 <div class="testimonial-card">
                     <div class="stars">
@@ -379,7 +389,7 @@
                         "Excelente servicio y productos de calidad. Mi familia quedó encantada con el cheesecake."
                     </p>
                     <div class="testimonial-author">
-                        <strong>Ana López</strong>
+                        <strong>Liliana Ascanio</strong>
                         <span>Ama de Casa</span>
                     </div>
                 </div>
@@ -509,7 +519,7 @@
     <script src="src/JavaScript/landing.js?v=2.7"></script>
 </body>
 
-</html> 
+</html>
 
 <!-- Modal Iniciar Sesión: Una ventana emergente superpuesta que se activa al darle clic iniciar sesión. Te pregunta tu rol ANTES de dejarte intentar entrar  -->
 <div class='login-modal-overlay' id='loginModal'>

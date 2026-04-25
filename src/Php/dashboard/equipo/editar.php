@@ -75,33 +75,60 @@ require_once __DIR__ . '/../includes/head.php';
                                 value="<?php echo htmlspecialchars($seller['apellido']); ?>">
                         </div>
                     </div>
+                    <?php
+                    // Verificar si los campos de documento ya tienen valor guardado
+                    $tiene_documento = !empty($seller['tipo_documento']) && !empty($seller['numero_documento']);
+                    ?>
                     <div class="form-row col-1-2">
                         <div class="form-group">
                             <label class="form-label">
                                 <i class="fas fa-id-card label-icon"></i> Tipo Documento
+                                <?php if ($tiene_documento): ?>
+                                    <span style="margin-left:0.4rem;color:#c97c89;"><i class="fas fa-lock" style="font-size:0.75rem;"></i></span>
+                                <?php endif; ?>
                             </label>
-                            <select name="tipo_documento" class="form-control" disabled
-                                style="background:#f5f5f5; color:#888; cursor:not-allowed; opacity:0.8;">
-                                <option value="">Seleccionar</option>
-                                <option value="CC" <?php echo ($seller['tipo_documento'] ?? '') === 'CC' ? 'selected' : ''; ?>>Cédula de Ciudadanía</option>
-                                <option value="TI" <?php echo ($seller['tipo_documento'] ?? '') === 'TI' ? 'selected' : ''; ?>>Tarjeta de Identidad</option>
-                                <option value="CE" <?php echo ($seller['tipo_documento'] ?? '') === 'CE' ? 'selected' : ''; ?>>Cédula de Extranjería</option>
-                            </select>
-                            <!-- Preservar valor aunque esté disabled -->
-                            <input type="hidden" name="tipo_documento" value="<?php echo htmlspecialchars($seller['tipo_documento'] ?? ''); ?>">
+                            <?php if ($tiene_documento): ?>
+                                <!-- Documento YA registrado: campo bloqueado -->
+                                <select class="form-control" disabled
+                                    style="background:#f5f5f5; color:#888; cursor:not-allowed; opacity:0.8;">
+                                    <option value="CC" <?php echo $seller['tipo_documento'] === 'CC' ? 'selected' : ''; ?>>Cédula de Ciudadanía</option>
+                                    <option value="TI" <?php echo $seller['tipo_documento'] === 'TI' ? 'selected' : ''; ?>>Tarjeta de Identidad</option>
+                                    <option value="CE" <?php echo $seller['tipo_documento'] === 'CE' ? 'selected' : ''; ?>>Cédula de Extranjería</option>
+                                </select>
+                                <input type="hidden" name="tipo_documento" value="<?php echo htmlspecialchars($seller['tipo_documento']); ?>">
+                            <?php else: ?>
+                                <!-- Documento VACÍO: permitir que el admin lo llene -->
+                                <select name="tipo_documento" class="form-control" required>
+                                    <option value="">Seleccionar</option>
+                                    <option value="CC">Cédula de Ciudadanía</option>
+                                    <option value="TI">Tarjeta de Identidad</option>
+                                    <option value="CE">Cédula de Extranjería</option>
+                                </select>
+                            <?php endif; ?>
                         </div>
                         <div class="form-group">
                             <label class="form-label">
                                 <i class="fas fa-hashtag label-icon"></i> Número de Documento
-                                <span title="El número de documento no puede modificarse" style="margin-left:0.4rem;color:#c97c89;"><i class="fas fa-lock" style="font-size:0.75rem;"></i></span>
+                                <?php if ($tiene_documento): ?>
+                                    <span title="El número de documento no puede modificarse" style="margin-left:0.4rem;color:#c97c89;"><i class="fas fa-lock" style="font-size:0.75rem;"></i></span>
+                                <?php endif; ?>
                             </label>
-                            <input type="text" class="form-control" readonly
-                                value="<?php echo htmlspecialchars($seller['numero_documento'] ?? ''); ?>"
-                                style="background:#f5f5f5; color:#888; cursor:not-allowed;"
-                                title="La cédula no puede modificarse">
-                            <!-- Preservar valor en el submit -->
-                            <input type="hidden" name="numero_documento" value="<?php echo htmlspecialchars($seller['numero_documento'] ?? ''); ?>">
-                            <span class="form-hint" style="color:#c97c89;"><i class="fas fa-lock"></i> Este campo no puede modificarse</span>
+                            <?php if ($tiene_documento): ?>
+                                <!-- Documento YA registrado: campo bloqueado -->
+                                <input type="text" class="form-control" readonly
+                                    value="<?php echo htmlspecialchars($seller['numero_documento']); ?>"
+                                    style="background:#f5f5f5; color:#888; cursor:not-allowed;"
+                                    title="La cédula no puede modificarse">
+                                <input type="hidden" name="numero_documento" value="<?php echo htmlspecialchars($seller['numero_documento']); ?>">
+                                <span class="form-hint" style="color:#c97c89;"><i class="fas fa-lock"></i> Este campo no puede modificarse</span>
+                            <?php else: ?>
+                                <!-- Documento VACÍO: permitir ingreso por primera vez -->
+                                <input type="text" name="numero_documento" class="form-control" required
+                                    maxlength="15"
+                                    oninput="this.value = this.value.replace(/[^0-9]/g, '');"
+                                    placeholder="Número de identificación">
+                                <span class="form-hint">Ingresa el documento. Una vez guardado, no podrá modificarse.</span>
+                            <?php endif; ?>
                         </div>
                     </div>
                 </div>

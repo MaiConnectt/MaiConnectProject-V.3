@@ -1,0 +1,12 @@
+# Ignorar archivo de variables de entorno (contiene contraseñas)
+.env
+
+# Dependencias de Composer (se reinstalan con: php composer.phar install)
+vendor/
+composer.phar
+
+# Ignorar carpeta de uploads (archivos subidos por usuarios)
+src/Php/uploads/
+
+# Ignorar caché y logs
+*.log

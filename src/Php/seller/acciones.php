@@ -32,6 +32,15 @@ try {
             ], $pdo, $member_id);
 
             if ($resultado['success']) {
+                // Enviar notificación por correo al administrador
+                require_once __DIR__ . '/../config/email_helper.php';
+                enviarCorreoNuevoPedidoAdmin([
+                    'telefono'  => trim($_POST['client_phone'] ?? ''),
+                    'direccion' => trim($_POST['client_address'] ?? ''),
+                    'fecha'     => $_POST['delivery_date'] ?? '',
+                    'vendedor'  => $_SESSION['seller_name'] ?? 'Desconocido'
+                ], $resultado['id_pedido']);
+
                 $_SESSION['success'] = "¡Pedido #" . str_pad($resultado['id_pedido'], 4, '0', STR_PAD_LEFT) . " creado exitosamente!";
                 header("Location: mis_pedidos.php");
                 exit;

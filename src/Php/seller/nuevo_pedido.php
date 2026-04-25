@@ -133,8 +133,9 @@ $extraStyles = '
                                             <div class="quantity-control">
                                                 <button type="button" class="btn-qty" onclick="updateQty(this, -1)"><i class="fas fa-minus" style="font-size: 0.8rem;"></i></button>
                                                 <input type="number" name="products[<?php echo $product['id_producto']; ?>]"
-                                                    class="form-input quantity-input product-quantity" min="0" step="1"
+                                                    class="form-input quantity-input product-quantity" min="0" max="500" step="1"
                                                     value="0" onkeypress="return event.charCode >= 48 && event.charCode <= 57"
+                                                    oninput="if(this.value > 500) this.value = 500; if(this.value < 0) this.value = 0;"
                                                     data-price="<?php echo $product['precio']; ?>">
                                                 <button type="button" class="btn-qty" onclick="updateQty(this, 1)"><i class="fas fa-plus" style="font-size: 0.8rem;"></i></button>
                                             </div>
@@ -236,6 +237,7 @@ $extraStyles = '
             let val = parseInt(input.value) || 0;
             val += change;
             if (val < 0) val = 0;
+            if (val > 500) val = 500;
             input.value = val;
             calculateTotals();
         }

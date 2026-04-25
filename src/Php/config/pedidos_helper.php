@@ -46,12 +46,15 @@ function validarDatosPedido(array $data): void
  */
 function insertarPedido(PDO $pdo, array $data, int $member_id): int
 {
+    // Calcular el siguiente ID manualmente (tbl_pedido usa INTEGER, no SERIAL)
+    $next_id = (int) $pdo->query("SELECT COALESCE(MAX(id_pedido), 0) + 1 FROM tbl_pedido")->fetchColumn();
+
     $stmt = $pdo->prepare(
-        "INSERT INTO tbl_pedido (id_vendedor, telefono_contacto, fecha_entrega, direccion_entrega, notas, estado, estado_pago, monto_comision)
-         VALUES (?, ?, ?, ?, ?, 0, 0, 0)
-         RETURNING id_pedido"
+        "INSERT INTO tbl_pedido (id_pedido, id_vendedor, telefono_contacto, fecha_entrega, direccion_entrega, notas, estado, estado_pago, monto_comision)
+         VALUES (?, ?, ?, ?, ?, ?, 0, 0, 0)"
     );
     $stmt->execute([
+        $next_id,
         $member_id,
         $data['telefono'],
         $data['fecha'],
@@ -59,7 +62,7 @@ function insertarPedido(PDO $pdo, array $data, int $member_id): int
         $data['notas'] ?? '',
     ]);
 
-    return (int) $stmt->fetchColumn();
+    return $next_id;
 }
 
 /**
@@ -75,6 +78,11 @@ function insertarDetalle(PDO $pdo, int $id_pedido, array $productos): float
         $cantidad = (int) $cantidad;
         if ($cantidad <= 0) continue;
 
+        // Validar cantidad máxima para evitar desbordamiento numérico en la BD
+        if ($cantidad > 500) {
+            throw new Exception("La cantidad máxima por producto es 500 unidades.");
+        }
+
         // Buscar producto existente (con lock para concurrencia)
         $stmt = $pdo->prepare("SELECT precio, nombre_producto FROM tbl_producto WHERE id_producto = ? FOR UPDATE");
         $stmt->execute([$id_producto]);
@@ -84,11 +92,14 @@ function insertarDetalle(PDO $pdo, int $id_pedido, array $productos): float
             throw new Exception("Producto no encontrado: #" . $id_producto);
         }
 
-        // Insertar detalle (ID generado por SERIAL)
+        // Calcular el siguiente ID manualmente (tbl_detalle_pedido usa INTEGER, no SERIAL)
+        $next_detalle_id = (int) $pdo->query("SELECT COALESCE(MAX(id_detalle_pedido), 0) + 1 FROM tbl_detalle_pedido")->fetchColumn();
+
+        // Insertar detalle con ID explícito
         $pdo->prepare(
-            "INSERT INTO tbl_detalle_pedido (id_pedido, id_producto, cantidad, precio_unitario)
-             VALUES (?, ?, ?, ?)"
-        )->execute([$id_pedido, $id_producto, $cantidad, $producto['precio']]);
+            "INSERT INTO tbl_detalle_pedido (id_detalle_pedido, id_pedido, id_producto, cantidad, precio_unitario)
+             VALUES (?, ?, ?, ?, ?)"
+        )->execute([$next_detalle_id, $id_pedido, $id_producto, $cantidad, $producto['precio']]);
 
         $total += ($cantidad * $producto['precio']);
     }
