@@ -1,11 +1,9 @@
 <?php
-/**
- * ===================================================================
+/*
  * Archivo: nueva_contrasena.php
  * Propósito: Vista del formulario para ingresar la nueva contraseña.
  *            Valida el token JWT de la URL antes de mostrar el form.
  *            Si el token es inválido o expiró, muestra error.
- * ===================================================================
  */
 
 $vendor_path = realpath(__DIR__ . '/../../../vendor/autoload.php');

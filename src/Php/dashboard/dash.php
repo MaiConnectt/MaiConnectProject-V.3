@@ -55,8 +55,8 @@ require_once __DIR__ . '/includes/head.php';
     <?php
     // Obtener estadísticas reales del dashboard
     try {
-        // Pedidos Totales (Todo el tiempo, excluyendo cancelados = 3)
-        $stmt_count = $pdo->query("SELECT COUNT(*) FROM tbl_pedido WHERE estado != 3");
+        // Pedidos Totales (Todo el tiempo)
+        $stmt_count = $pdo->query("SELECT COUNT(*) FROM tbl_pedido");
         $total_orders = $stmt_count->fetchColumn();
 
         // Ingresos Mensuales (Solo pedidos completados = 2)

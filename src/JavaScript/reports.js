@@ -1,10 +1,7 @@
-/**
- * ===================================================================
- * Archivo: reports.js
- * Propósito: Instancia y dibuja los gráficos (Chart.js) pasados desde
- *            el backend hacia la vista (con var global ReportsData).
- * ===================================================================
- */
+
+//  Archivo: reports.js
+//  Propósito: Instancia y dibuja los gráficos (Chart.js) pasados desde
+//   el backend hacia la vista (con var global ReportsData).
 document.addEventListener('DOMContentLoaded', function () {
     if (typeof Chart === 'undefined' || typeof window.ReportsData === 'undefined') return;
 
@@ -33,8 +30,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 responsive: true,
                 maintainAspectRatio: false,
                 cutout: '80%', // Dona más delgada y elegante
-                plugins: { 
-                    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } } 
+                plugins: {
+                    legend: { position: 'bottom', labels: { usePointStyle: true, padding: 20 } }
                 }
             }
         });

@@ -19,21 +19,23 @@ $env = [];
 foreach (file($env_path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $linea) {
     $linea = trim($linea);
     // Ignorar líneas vacías y comentarios (# o ;)
-    if ($linea === '' || $linea[0] === '#' || $linea[0] === ';') continue;
+    if ($linea === '' || $linea[0] === '#' || $linea[0] === ';')
+        continue;
     // Separar solo en el PRIMER '=' para permitir valores con '=' dentro
     $pos = strpos($linea, '=');
-    if ($pos === false) continue;
+    if ($pos === false)
+        continue;
     $clave = trim(substr($linea, 0, $pos));
     $valor = trim(substr($linea, $pos + 1));
     $env[$clave] = $valor;
 }
 
 // Parámetros de conexión leídos del .env
-$host     = $env['DB_HOST']     ?? 'localhost';
-$port     = $env['DB_PORT']     ?? 5432;
-$dbname   = $env['DB_NAME']     ?? '';
-$user     = $env['DB_USER']     ?? '';
-$password = $env['DB_PASSWORD'] ?? '';
+$host = $env['DB_HOST'];
+$port = $env['DB_PORT'];
+$dbname = $env['DB_NAME'];
+$user = $env['DB_USER'];
+$password = $env['DB_PASSWORD'];
 try {
     // Instanciar el objeto PDO para la conexión con PostgreSQL
     $pdo = new PDO(

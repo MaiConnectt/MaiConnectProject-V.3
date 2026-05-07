@@ -1,6 +1,5 @@
--- ==============================================================================
+
 -- Mai Shop - Funciones de Base de Datos para Eliminación Lógica de Vendedores
--- ==============================================================================
 
 -- 4. Función: Desactivar Vendedor (Soft Delete Puro)
 CREATE OR REPLACE FUNCTION fun_desactivar_vendedor(
@@ -22,7 +21,7 @@ BEGIN
     -- Retornar confirmación estructurada
     RETURN json_build_object('success', true, 'message', 'Vendedor eliminado lógicamente del sistema', 'id_miembro', p_id_miembro);
 
-EXCEPTION WHEN OTHERS THEN
+EXCEPTION WHEN OTHERS THE
     RETURN json_build_object('success', false, 'message', 'Error interno: ' || SQLERRM, 'error_code', 'INTERNAL_ERROR');
 END;
 $$ LANGUAGE plpgsql;

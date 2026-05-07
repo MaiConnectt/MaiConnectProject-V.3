@@ -1,9 +1,8 @@
 /**
- * ===================================================================
+
  * Archivo: seller.js
  * Propósito: Interacciones base del módulo de ventas (Vendedor).
  *            Menú lateral en mobile, y animación de estadísticas de la vista.
- * ===================================================================
  */
 document.addEventListener('DOMContentLoaded', function () {
     // Alternar menú de móvil

@@ -1,9 +1,9 @@
 
--- ------------------------------------------------------------
+
 -- Vista 1: Totales por pedido
 -- Calcula el total económico de cada pedido sumando sus líneas
 -- de detalle activas. Usada ampliamente en dashboard y seller.
--- ------------------------------------------------------------
+
 CREATE OR REPLACE VIEW vw_totales_pedido AS
 SELECT
     p.id_pedido,
@@ -24,13 +24,10 @@ GROUP BY
     p.id_pedido, p.id_vendedor, p.telefono_contacto, p.direccion_entrega,
     p.fecha_entrega, p.fecha_creacion, p.estado, p.estado_pago, p.notas;
 
-
--- ------------------------------------------------------------
 -- Vista 2: Comisiones por vendedor
 -- Agrega ventas, comisiones ganadas, pagadas y saldo pendiente
 -- por cada miembro activo del equipo.
 -- Depende de: vw_totales_pedido (debe existir primero).
--- ------------------------------------------------------------
 CREATE OR REPLACE VIEW vw_comisiones_vendedor AS
 SELECT
     m.id_miembro,

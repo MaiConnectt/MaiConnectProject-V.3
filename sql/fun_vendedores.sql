@@ -1,6 +1,4 @@
--- ==============================================================================
 -- Mai Shop - Funciones de Base de Datos para Gestión de Vendedores (Equipo)
--- ==============================================================================
 
 -- 1. Función: Crear Vendedor (Usuario + Miembro)
 CREATE OR REPLACE FUNCTION fun_crear_vendedor(

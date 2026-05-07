@@ -1,11 +1,9 @@
 /**
- * ===================================================================
  * Archivo: productos_form.js
  * Propósito: Scripts de validación y envío (AJAX / Fetch) para el 
  *            formulario de crear y editar un producto.
- * ===================================================================
  */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const productForm = document.getElementById('productForm');
     if (productForm) {
         productForm.addEventListener('submit', function (e) {

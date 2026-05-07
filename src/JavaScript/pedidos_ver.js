@@ -1,10 +1,8 @@
-/**
- * ===================================================================
+/*
  * Archivo: pedidos_ver.js
  * Propósito: Define la función global para manejar las acciones
  *            (con o sin motivo) disponibles en la vista detallada
  *            de un pedido, interactuando con el MaiModal.
- * ===================================================================
  */
 
 /**

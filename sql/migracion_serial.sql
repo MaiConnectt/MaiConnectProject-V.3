@@ -1,7 +1,6 @@
--- ==============================================================================
+
 -- Migración: Convertir id_pedido e id_detalle_pedido a SERIAL (auto-incremento)
 -- Ejecutar UNA SOLA VEZ en PostgreSQL
--- ==============================================================================
 
 -- 1. Crear secuencia para tbl_pedido
 CREATE SEQUENCE IF NOT EXISTS tbl_pedido_id_pedido_seq;

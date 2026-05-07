@@ -1,11 +1,9 @@
 /**
- * ===================================================================
  * Archivo: mai-modal.js
  * Propósito: Define el objeto global `MaiModal`, un controlador 
  *            customizado para la ventana modal en el proyecto. 
  *            Provee métodos para alertas, prompts y confirmaciones 
  *            sustituyendo las funciones nativas del navegador.
- * ===================================================================
  */
 const MaiModal = {
     elements: {},

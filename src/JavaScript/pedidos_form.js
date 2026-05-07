@@ -1,15 +1,13 @@
 /**
- * ===================================================================
  * Archivo: pedidos_form.js
  * Propósito: Scripts específicos para la interfaz de creación y 
  *            edición de pedidos múltiples (multi-producto).
  *            Controla añadir filas, calcular subtotales y total.
- * ===================================================================
  */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Se espera que window.ProductsData contenga el productIndex inicial pre-cargado desde PHP
     let productIndex = window.ProductsData ? window.ProductsData.initialIndex : 0;
-    
+
     const addProductBtn = document.getElementById('addProductBtn');
     if (addProductBtn) {
         addProductBtn.addEventListener('click', function () {
@@ -48,8 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
             updateTotal();
         }
 
-        if(quantityInput) quantityInput.addEventListener('input', updateSubtotal);
-        if(priceInput) priceInput.addEventListener('input', updateSubtotal);
+        if (quantityInput) quantityInput.addEventListener('input', updateSubtotal);
+        if (priceInput) priceInput.addEventListener('input', updateSubtotal);
 
         if (removeBtn) {
             removeBtn.addEventListener('click', function () {

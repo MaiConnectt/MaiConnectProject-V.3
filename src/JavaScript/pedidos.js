@@ -1,10 +1,7 @@
-/**
- * ===================================================================
- * Archivo: pedidos.js
+/* * Archivo: pedidos.js
  * Propósito: Scripts para la vista principal de gestión de pedidos.
  *            Interactúa con cambios de estado, modal de cancelación,
  *            llamando mediante Fetch a las API de actualizar y borrar.
- * ===================================================================
  */
 
 document.addEventListener('DOMContentLoaded', function () {

@@ -1,10 +1,9 @@
 /**
- * ===================================================================
  * Archivo: productos.js
  * Propósito: Interacciones para la gestión del catálogo de productos.
  *            Incluye confirmación para eliminar usando MaiModal,
  *            animación scroll y envío diferido del buscador (debounce).
- * ===================================================================
+ 
  */
 document.addEventListener('DOMContentLoaded', function () {
     // Confirmación de eliminación de producto

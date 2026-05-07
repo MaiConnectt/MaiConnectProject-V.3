@@ -1,11 +1,9 @@
-/**
- * ===================================================================
- * Archivo: dashboard.js
- * Propósito: Scripts principales para la interfaz del Dashboard.
- *            Manejo del menú lateral, dropdown de perfil, animaciones
- *            al hacer scroll, y animación de contadores numéricos.
- * ===================================================================
- */
+
+//  * Archivo: dashboard.js
+//  * Propósito: Scripts principales para la interfaz del Dashboard.
+//  *            Manejo del menú lateral, dropdown de perfil, animaciones
+//  *            al hacer scroll, y animación de contadores numéricos.
+
 
 document.addEventListener('DOMContentLoaded', function () {
 
