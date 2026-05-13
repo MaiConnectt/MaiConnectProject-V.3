@@ -1,15 +1,14 @@
 <?php
 /**
- * ===================================================================
  * Archivo: recuperar.php
  * Propósito: Vista del formulario "Recuperar contraseña".
  *            El admin/vendedor ingresa su email y recibe un enlace.
- * ===================================================================
  */
 require_once __DIR__ . '/../config/conexion.php';
 ?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -26,6 +25,7 @@ require_once __DIR__ . '/../config/conexion.php';
             margin-bottom: 1.5rem;
             display: inline-block;
         }
+
         .info-box {
             background: #f0f7ff;
             border-left: 4px solid #4a90d9;
@@ -39,7 +39,12 @@ require_once __DIR__ . '/../config/conexion.php';
             align-items: flex-start;
             gap: 0.8rem;
         }
-        .info-box i { margin-top: 0.15rem; flex-shrink: 0; }
+
+        .info-box i {
+            margin-top: 0.15rem;
+            flex-shrink: 0;
+        }
+
         .success-box {
             background: #f0fff4;
             border-left: 4px solid #38a169;
@@ -53,24 +58,39 @@ require_once __DIR__ . '/../config/conexion.php';
             align-items: flex-start;
             gap: 0.8rem;
         }
+
         #btn-send {
             position: relative;
             overflow: hidden;
         }
+
         #btn-send .spinner {
             display: none;
-            width: 20px; height: 20px;
-            border: 3px solid rgba(255,255,255,0.4);
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.4);
             border-top-color: white;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
             margin: 0 auto;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        #btn-send.loading .btn-text { display: none; }
-        #btn-send.loading .spinner { display: block; }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        #btn-send.loading .btn-text {
+            display: none;
+        }
+
+        #btn-send.loading .spinner {
+            display: block;
+        }
     </style>
 </head>
+
 <body>
     <div class="login-container">
 
@@ -83,7 +103,8 @@ require_once __DIR__ . '/../config/conexion.php';
         <!-- Mensaje de información -->
         <div class="info-box">
             <i class="fas fa-info-circle"></i>
-            <span>Ingresa el correo electrónico asociado a tu cuenta y recibirás un enlace válido por <strong>15 minutos</strong>.</span>
+            <span>Ingresa el correo electrónico asociado a tu cuenta y recibirás un enlace válido por <strong>15
+                    minutos</strong>.</span>
         </div>
 
         <!-- Área de resultado (éxito o error) -->
@@ -95,13 +116,14 @@ require_once __DIR__ . '/../config/conexion.php';
                 <label for="email">Correo Electrónico</label>
                 <div class="input-group">
                     <i class="fas fa-envelope"></i>
-                    <input type="email" id="email" name="email" class="form-control"
-                        placeholder="ejemplo@correo.com" required autocomplete="off">
+                    <input type="email" id="email" name="email" class="form-control" placeholder="ejemplo@correo.com"
+                        required autocomplete="off">
                 </div>
             </div>
 
             <button type="submit" class="btn-submit" id="btn-send">
-                <span class="btn-text"><i class="fas fa-paper-plane" style="margin-right:0.5rem;"></i> Enviar enlace</span>
+                <span class="btn-text"><i class="fas fa-paper-plane" style="margin-right:0.5rem;"></i> Enviar
+                    enlace</span>
                 <span class="spinner"></span>
             </button>
         </form>
@@ -112,7 +134,7 @@ require_once __DIR__ . '/../config/conexion.php';
     </div>
 
     <script>
-        document.getElementById('recoverForm').addEventListener('submit', function (e) {
+        document.getElementById('recoverForm').addEventListener('submit', async function (e) {
             e.preventDefault();
 
             const btn = document.getElementById('btn-send');
@@ -124,13 +146,15 @@ require_once __DIR__ . '/../config/conexion.php';
             btn.disabled = true;
             resultArea.style.display = 'none';
 
-            fetch('recuperar_accion.php', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                body: 'email=' + encodeURIComponent(email)
-            })
-            .then(res => res.json())
-            .then(data => {
+            try {
+                const res = await fetch('recuperar_accion.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'email=' + encodeURIComponent(email)
+                });
+
+                const data = await res.json();
+
                 btn.classList.remove('loading');
                 btn.disabled = false;
 
@@ -155,8 +179,7 @@ require_once __DIR__ . '/../config/conexion.php';
                         </div>`;
                     resultArea.style.display = 'block';
                 }
-            })
-            .catch(() => {
+            } catch (error) {
                 btn.classList.remove('loading');
                 btn.disabled = false;
                 resultArea.innerHTML = `
@@ -165,8 +188,9 @@ require_once __DIR__ . '/../config/conexion.php';
                         Error de conexión. Intenta de nuevo.
                     </div>`;
                 resultArea.style.display = 'block';
-            });
+            }
         });
     </script>
 </body>
+
 </html>

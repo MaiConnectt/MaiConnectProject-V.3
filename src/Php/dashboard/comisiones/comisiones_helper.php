@@ -103,26 +103,11 @@ function subirComprobante(array $file): ?string {
         throw new Exception("Error técnico en la subida del archivo (Código: " . $file['error'] . ").");
     }
 
-    // 1. Validación de tamaño (Max 2MB)
-    $max_size = 2 * 1024 * 1024; // 2MB en bytes
-    if ($file['size'] > $max_size) {
-        throw new Exception("El archivo supera el tamaño máximo permitido de 2MB.");
-    }
-
-    // 2. Validación de tipo de archivo (solo imágenes permitidas)
-    $allowed_extensions = ['jpg', 'jpeg', 'png', 'webp'];
-    $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-
-    if (!in_array($file_ext, $allowed_extensions)) {
-        throw new Exception("Tipo de archivo no válido. Solo se permiten imágenes (JPG, JPEG, PNG, WEBP).");
-    }
-
-    // 3. Validación de seguridad adicional (verificar contenido de imagen)
-    $image_info = @getimagesize($file['tmp_name']);
-    if ($image_info === false) {
-        throw new Exception("El archivo no parece ser una imagen válida o está corrupto.");
-    }
+    // Validación estricta con MIME Fileinfo (Anti-malware/PHP injection)
+    require_once __DIR__ . '/../../config/helpers.php';
+    validarImagen($file);
     
+    $file_ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
     $upload_dir = __DIR__ . '/../../uploads/comisiones/';
     if (!is_dir($upload_dir)) {
         mkdir($upload_dir, 0777, true);

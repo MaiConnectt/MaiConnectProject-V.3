@@ -21,7 +21,7 @@ BEGIN
     -- Retornar confirmación estructurada
     RETURN json_build_object('success', true, 'message', 'Vendedor eliminado lógicamente del sistema', 'id_miembro', p_id_miembro);
 
-EXCEPTION WHEN OTHERS THE
+EXCEPTION WHEN OTHERS THEN
     RETURN json_build_object('success', false, 'message', 'Error interno: ' || SQLERRM, 'error_code', 'INTERNAL_ERROR');
 END;
 $$ LANGUAGE plpgsql;

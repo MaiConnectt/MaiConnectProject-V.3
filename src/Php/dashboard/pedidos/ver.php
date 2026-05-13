@@ -41,7 +41,7 @@ try {
             u.apellido as apellido_vendedor,
             u.email as email_vendedor,
             vw.total as monto_total
-        FROM tbl_pedido 
+        FROM tbl_pedido o
         LEFT JOIN tbl_miembro m ON o.id_vendedor = m.id_miembro
         LEFT JOIN tbl_usuario u ON m.id_usuario = u.id_usuario
         LEFT JOIN vw_totales_pedido vw ON o.id_pedido = vw.id_pedido

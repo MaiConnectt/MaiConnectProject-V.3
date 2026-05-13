@@ -195,7 +195,7 @@ if (empty($token)) {
         // Envío AJAX del formulario
         const form = document.getElementById('newPassForm');
         if (form) {
-            form.addEventListener('submit', function (e) {
+            form.addEventListener('submit', async function (e) {
                 e.preventDefault();
                 const password = document.getElementById('password').value;
                 const confirm  = document.getElementById('password_confirm').value;
@@ -216,31 +216,32 @@ if (empty($token)) {
                 result.style.display = 'none';
 
                 const formData = new FormData(this);
-                fetch('nueva_contrasena_accion.php', { method: 'POST', body: formData })
-                    .then(res => res.json())
-                    .then(data => {
-                        btn.classList.remove('loading');
-                        btn.disabled = false;
-                        if (data.success) {
-                            form.style.display = 'none';
-                            result.innerHTML = `
-                                <div style="background:#f0fff4;border-left:4px solid #38a169;border-radius:12px;padding:1.4rem;color:#276749;text-align:left;display:flex;gap:0.8rem;align-items:flex-start;">
-                                    <i class="fas fa-check-circle" style="font-size:1.4rem;margin-top:0.1rem;"></i>
-                                    <div><strong>¡Contraseña actualizada!</strong><br>Serás redirigido al inicio de sesión en 3 segundos...</div>
-                                </div>`;
-                            result.style.display = 'block';
-                            setTimeout(() => window.location.href = '<?= BASE_URL ?>/src/Php/login/login.php', 3000);
-                        } else {
-                            result.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-circle"></i> ${data.message}</div>`;
-                            result.style.display = 'block';
-                        }
-                    })
-                    .catch(() => {
-                        btn.classList.remove('loading');
-                        btn.disabled = false;
-                        result.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Error de conexión. Intenta de nuevo.</div>';
+                try {
+                    const res = await fetch('nueva_contrasena_accion.php', { method: 'POST', body: formData });
+                    const data = await res.json();
+                    
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    
+                    if (data.success) {
+                        form.style.display = 'none';
+                        result.innerHTML = `
+                            <div style="background:#f0fff4;border-left:4px solid #38a169;border-radius:12px;padding:1.4rem;color:#276749;text-align:left;display:flex;gap:0.8rem;align-items:flex-start;">
+                                <i class="fas fa-check-circle" style="font-size:1.4rem;margin-top:0.1rem;"></i>
+                                <div><strong>¡Contraseña actualizada!</strong><br>Serás redirigido al inicio de sesión en 3 segundos...</div>
+                            </div>`;
                         result.style.display = 'block';
-                    });
+                        setTimeout(() => window.location.href = '<?= BASE_URL ?>/src/Php/login/login.php', 3000);
+                    } else {
+                        result.innerHTML = `<div class="error-message"><i class="fas fa-exclamation-circle"></i> ${data.message}</div>`;
+                        result.style.display = 'block';
+                    }
+                } catch (error) {
+                    btn.classList.remove('loading');
+                    btn.disabled = false;
+                    result.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-circle"></i> Error de conexión. Intenta de nuevo.</div>';
+                    result.style.display = 'block';
+                }
             });
         }
     </script>

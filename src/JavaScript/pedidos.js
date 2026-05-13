@@ -136,31 +136,32 @@ document.addEventListener('DOMContentLoaded', function () {
  * @param {HTMLSelectElement} selectElement Referencia al `<select>` para revertir su valor en caso de error.
  * @param {string} notaCancelacion Razón proporcionada al cancelar el pedido, si aplica.
  */
-function updateOrderStatus(orderId, newStatus, selectElement, notaCancelacion) {
-    fetch('cambiar_estado.php', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            order_id: orderId,
-            status: newStatus,
-            nota_cancelacion: notaCancelacion || ''
-        })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showNotification(data.message, 'success');
-                setTimeout(() => window.location.reload(), 1000);
-            } else {
-                showNotification(data.message || 'Error al actualizar el estado', 'error');
-                if (selectElement) selectElement.value = selectElement.dataset.originalValue || '0';
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('Error de conexión', 'error');
-            if (selectElement) selectElement.value = selectElement.dataset.originalValue || '0';
+async function updateOrderStatus(orderId, newStatus, selectElement, notaCancelacion) {
+    try {
+        const response = await fetch('cambiar_estado.php', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                order_id: orderId,
+                status: newStatus,
+                nota_cancelacion: notaCancelacion || ''
+            })
         });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification(data.message, 'success');
+            setTimeout(() => window.location.reload(), 1000);
+        } else {
+            showNotification(data.message || 'Error al actualizar el estado', 'error');
+            if (selectElement) selectElement.value = selectElement.dataset.originalValue || '0';
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Error de conexión', 'error');
+        if (selectElement) selectElement.value = selectElement.dataset.originalValue || '0';
+    }
 }
 
 /**
@@ -168,33 +169,34 @@ function updateOrderStatus(orderId, newStatus, selectElement, notaCancelacion) {
  * tras confirmación del usuario para eliminar un pedido.
  * @param {string|number} orderId ID del pedido a eliminar.
  */
-function deleteOrder(orderId) {
-    fetch('acciones.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            action: 'delete',
-            order_id: orderId
-        })
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                showNotification(data.message, 'success');
-                // Recargar la página después de 1 segundo
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-            } else {
-                showNotification(data.message || 'Error al eliminar el pedido', 'error');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('Error de conexión', 'error');
+async function deleteOrder(orderId) {
+    try {
+        const response = await fetch('acciones.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                action: 'delete',
+                order_id: orderId
+            })
         });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            showNotification(data.message, 'success');
+            // Recargar la página después de 1 segundo
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            showNotification(data.message || 'Error al eliminar el pedido', 'error');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('Error de conexión', 'error');
+    }
 }
 
 /**

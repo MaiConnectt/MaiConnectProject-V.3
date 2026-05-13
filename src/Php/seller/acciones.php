@@ -68,7 +68,11 @@ try {
                 throw new Exception("Error al recibir el archivo del comprobante");
             }
 
-            $upload_dir = __DIR__ . '/../uploads/orders/';
+            // Validar estrictamente que sea una imagen usando MIME Fileinfo
+            require_once __DIR__ . '/../../config/helpers.php';
+            validarImagen($_FILES['comprobante']);
+
+            $upload_dir = __DIR__ . '/../../uploads/orders/';
             if (!is_dir($upload_dir))
                 mkdir($upload_dir, 0777, true);
 

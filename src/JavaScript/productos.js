@@ -42,44 +42,45 @@ document.addEventListener('DOMContentLoaded', function () {
  * de un producto definido. Funciona con validación modal previa.
  * @param {string|number} productId ID del producto a eliminar
  */
-function deleteProduct(productId) {
+async function deleteProduct(productId) {
     // Mostrar carga en la ventana modal
     MaiModal.showLoading('Eliminando...');
 
-    // Enviar solicitud de eliminación
-    fetch('acciones.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `action=delete&id_producto=${productId}`
-    })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                MaiModal.close();
-                showNotification('Producto eliminado exitosamente', 'success');
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-            } else {
-                MaiModal.alert({
-                    title: 'Error',
-                    message: data.message || 'Error al eliminar producto',
-                    type: 'danger'
-                });
-                MaiModal.hideLoading('Eliminar');
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
+    try {
+        // Enviar solicitud de eliminación
+        const response = await fetch('acciones.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `action=delete&id_producto=${productId}`
+        });
+        
+        const data = await response.json();
+
+        if (data.success) {
+            MaiModal.close();
+            showNotification('Producto eliminado exitosamente', 'success');
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
             MaiModal.alert({
-                title: 'Error de Red',
-                message: 'No se pudo comunicar con el servidor.',
+                title: 'Error',
+                message: data.message || 'Error al eliminar producto',
                 type: 'danger'
             });
             MaiModal.hideLoading('Eliminar');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+        MaiModal.alert({
+            title: 'Error de Red',
+            message: 'No se pudo comunicar con el servidor.',
+            type: 'danger'
         });
+        MaiModal.hideLoading('Eliminar');
+    }
 }
 
 /**

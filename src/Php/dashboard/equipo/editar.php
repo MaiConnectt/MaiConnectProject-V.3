@@ -202,40 +202,40 @@ require_once __DIR__ . '/../includes/head.php';
 
 
 <script>
-    document.getElementById('editForm').addEventListener('submit', function (e) {
+    document.getElementById('editForm').addEventListener('submit', async function (e) {
         e.preventDefault();
         const formData = new FormData(this);
 
-        fetch('acciones.php', {
-            method: 'POST',
-            body: formData
-        })
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    MaiModal.alert({
-                        title: '¡Cambios Guardados!',
-                        message: data.message,
-                        type: 'success',
-                        onConfirm: () => {
-                            window.location.href = 'equipo.php';
-                        }
-                    });
-                } else {
-                    MaiModal.alert({
-                        title: 'Error',
-                        message: data.message,
-                        type: 'danger'
-                    });
-                }
-            })
-            .catch(err => {
+        try {
+            const res = await fetch('acciones.php', {
+                method: 'POST',
+                body: formData
+            });
+            const data = await res.json();
+
+            if (data.success) {
                 MaiModal.alert({
-                    title: 'Error Técnico',
-                    message: err.message,
+                    title: '¡Cambios Guardados!',
+                    message: data.message,
+                    type: 'success',
+                    onConfirm: () => {
+                        window.location.href = 'equipo.php';
+                    }
+                });
+            } else {
+                MaiModal.alert({
+                    title: 'Error',
+                    message: data.message,
                     type: 'danger'
                 });
+            }
+        } catch (err) {
+            MaiModal.alert({
+                title: 'Error Técnico',
+                message: err.message || 'Ocurrió un error al procesar la solicitud.',
+                type: 'danger'
             });
+        }
     });
 </script>
 <?php

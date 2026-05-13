@@ -225,48 +225,49 @@ require_once __DIR__ . '/../includes/head.php';
      * En lugar de recargar la página (comportamiento por defecto),
      * envía los datos al servidor de forma asíncrona (AJAX con Fetch API).
      */
-    document.getElementById('sellerForm').addEventListener('submit', function (e) {
+    document.getElementById('sellerForm').addEventListener('submit', async function (e) {
         // Previene el envío tradicional del formulario (que recargaría la página)
         e.preventDefault();
 
         // FormData captura todos los campos del formulario automáticamente
         const formData = new FormData(this);
 
-        // Envía los datos por POST a acciones.php (que procesa la creación)
-        fetch('acciones.php', {
-            method: 'POST',
-            body: formData
-        })
+        try {
+            // Envía los datos por POST a acciones.php (que procesa la creación)
+            const res = await fetch('acciones.php', {
+                method: 'POST',
+                body: formData
+            });
+            
             // Convierte la respuesta del servidor a JSON
-            .then(res => res.json())
-            .then(data => {
-                if (data.success) {
-                    // Si fue exitoso: muestra modal de éxito y redirige a la lista de equipo
-                    MaiModal.alert({
-                        title: '¡Vendedor Creado!',
-                        message: data.message,
-                        type: 'success',
-                        onConfirm: () => {
-                            window.location.href = 'equipo.php';
-                        }
-                    });
-                } else {
-                    // Si hubo un error controlado: muestra el mensaje de error
-                    MaiModal.alert({
-                        title: 'Error',
-                        message: data.message,
-                        type: 'danger'
-                    });
-                }
-            })
-            // Si hubo un error técnico (red, servidor caído, etc.)
-            .catch(err => {
+            const data = await res.json();
+
+            if (data.success) {
+                // Si fue exitoso: muestra modal de éxito y redirige a la lista de equipo
                 MaiModal.alert({
-                    title: 'Error Técnico',
-                    message: err.message,
+                    title: '¡Vendedor Creado!',
+                    message: data.message,
+                    type: 'success',
+                    onConfirm: () => {
+                        window.location.href = 'equipo.php';
+                    }
+                });
+            } else {
+                // Si hubo un error controlado: muestra el mensaje de error
+                MaiModal.alert({
+                    title: 'Error',
+                    message: data.message,
                     type: 'danger'
                 });
+            }
+        } catch (err) {
+            // Si hubo un error técnico (red, servidor caído, etc.)
+            MaiModal.alert({
+                title: 'Error Técnico',
+                message: err.message || 'Ocurrió un error al procesar la solicitud.',
+                type: 'danger'
             });
+        }
     });
 </script>
 
