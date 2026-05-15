@@ -453,9 +453,17 @@ body {
 }
 
 /* ===== ORDERS TABLE ===== */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 1rem;
+}
+
 .orders-table {
     width: 100%;
     border-collapse: collapse;
+    min-width: 600px; /* Previene compresión de columnas en móviles */
 }
 
 .orders-table th {

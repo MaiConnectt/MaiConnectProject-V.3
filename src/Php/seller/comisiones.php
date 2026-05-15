@@ -114,6 +114,7 @@ $pageTitle = 'Mis Comisiones';
                 <div class="card-header">
                     <h3 class="card-title">Resumen de Ventas</h3>
                 </div>
+                <div class="table-responsive">
                 <table class="table">
                     <tr>
                         <td style="font-weight: 600;">Ventas Totales</td>
@@ -142,5 +143,6 @@ $pageTitle = 'Mis Comisiones';
                         </td>
                     </tr>
                 </table>
+                </div>
             </div>
 <?php include __DIR__ . '/includes/footer.php'; ?>

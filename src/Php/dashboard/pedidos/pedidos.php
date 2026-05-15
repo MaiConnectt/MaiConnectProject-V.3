@@ -223,6 +223,7 @@ require_once __DIR__ . '/../includes/head.php';
             </div>
         <?php else: ?>
             <div class="orders-table-wrapper">
+                <div class="table-responsive">
                 <table class="orders-table-full">
                     <thead>
                         <tr>
@@ -323,6 +324,7 @@ require_once __DIR__ . '/../includes/head.php';
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                </div>
             </div>
 
             <!-- Paginación -->

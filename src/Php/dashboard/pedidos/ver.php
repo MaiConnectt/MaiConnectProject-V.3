@@ -199,6 +199,7 @@ include __DIR__ . '/../includes/sidebar.php';
                 <h2 class="detail-card-title">
                     <i class="fas fa-cookie-bite"></i> Productos
                 </h2>
+                <div class="table-responsive">
                 <table class="items-table">
                     <thead>
                         <tr>
@@ -233,6 +234,7 @@ include __DIR__ . '/../includes/sidebar.php';
                         </tr>
                     </tbody>
                 </table>
+                </div>
             </div>
 
             <!-- Sección de Firmas - Solo Impresión -->

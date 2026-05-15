@@ -179,6 +179,7 @@ require_once __DIR__ . '/includes/head.php';
                 <a href="<?= BASE_URL ?>/src/Php/dashboard/pedidos/pedidos.php" class="card-action">Ver todos <i
                         class="fas fa-arrow-right"></i></a>
             </div>
+            <div class="table-responsive">
             <table class="orders-table">
                 <thead>
                     <tr>
@@ -250,6 +251,7 @@ require_once __DIR__ . '/includes/head.php';
                     ?>
                 </tbody>
             </table>
+            </div>
         </div>
 
         <!-- Acciones Rápidas Eliminadas -->

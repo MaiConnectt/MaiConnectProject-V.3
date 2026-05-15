@@ -223,12 +223,7 @@
                     <div class="product-image">
                         <img src="https://images.unsplash.com/photo-1578985545062-69928b1d9587?w=600&q=80"
                             alt="Tortas Personalizadas">
-                        <div class="product-overlay">
-                            <a href="https://wa.me/573244917185?text=Quiero%20información%20sobre%20tortas"
-                                class="btn-order" target="_blank">
-                                <i class="fab fa-whatsapp"></i> Pedir
-                            </a>
-                        </div>
+
                     </div>
                     <div class="product-info">
                         <h3>Tortas Personalizadas</h3>
@@ -241,12 +236,7 @@
                     <div class="product-image">
                         <img src="https://images.unsplash.com/photo-1614707267537-b85aaf00c4b7?w=600&q=80"
                             alt="Cupcakes">
-                        <div class="product-overlay">
-                            <a href="https://wa.me/573244917185?text=Quiero%20información%20sobre%20cupcakes"
-                                class="btn-order" target="_blank">
-                                <i class="fab fa-whatsapp"></i> Pedir
-                            </a>
-                        </div>
+
                     </div>
                     <div class="product-info">
                         <h3>Cupcakes Gourmet</h3>
@@ -259,12 +249,7 @@
                     <div class="product-image">
                         <img src="https://images.unsplash.com/photo-1558961363-fa8fdf82db35?w=600&q=80"
                             alt="Galletas Decoradas">
-                        <div class="product-overlay">
-                            <a href="https://wa.me/573244917185?text=Quiero%20información%20sobre%20galletas"
-                                class="btn-order" target="_blank">
-                                <i class="fab fa-whatsapp"></i> Pedir
-                            </a>
-                        </div>
+
                     </div>
                     <div class="product-info">
                         <h3>Galletas Decoradas</h3>
@@ -277,12 +262,7 @@
                     <div class="product-image">
                         <img src="https://images.unsplash.com/photo-1624353365286-3f8d62daad51?w=600&q=80"
                             alt="Brownies">
-                        <div class="product-overlay">
-                            <a href="https://wa.me/573244917185?text=Quiero%20información%20sobre%20brownies"
-                                class="btn-order" target="_blank">
-                                <i class="fab fa-whatsapp"></i> Pedir
-                            </a>
-                        </div>
+
                     </div>
                     <div class="product-info">
                         <h3>Brownies Premium</h3>
@@ -295,12 +275,7 @@
                     <div class="product-image">
                         <img src="https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&q=80"
                             alt="Cheesecake">
-                        <div class="product-overlay">
-                            <a href="https://wa.me/573244917185?text=Quiero%20información%20sobre%20cheesecake"
-                                class="btn-order" target="_blank">
-                                <i class="fab fa-whatsapp"></i> Pedir
-                            </a>
-                        </div>
+
                     </div>
                     <div class="product-info">
                         <h3>Cheesecake</h3>
@@ -313,12 +288,7 @@
                     <div class="product-image">
                         <img src="https://images.unsplash.com/photo-1586985289688-ca3cf47d3e6e?w=600&q=80"
                             alt="Alfajores">
-                        <div class="product-overlay">
-                            <a href="https://wa.me/573244917185?text=Quiero%20información%20sobre%20alfajores"
-                                class="btn-order" target="_blank">
-                                <i class="fab fa-whatsapp"></i> Pedir
-                            </a>
-                        </div>
+
                     </div>
                     <div class="product-info">
                         <h3>Alfajores</h3>
@@ -331,71 +301,7 @@
     </section>
 
 
-    <!-- Sección de Testimonios: Muestra reseñas de clientes reales. Estrategia de prueba social para dar confianza -->
-    <section class="testimonials">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-label">Testimonios</span>
-                <h2 class="section-title">Lo Que Dicen Nuestros Clientes</h2>
-            </div>
 
-            <!-- Cuadrícula que organiza las tarjetas de reseñas de los clientes -->
-            <div class="testimonials-grid">
-
-                <!-- Tarjeta individual: Contiene 5 estrellas ficticias (o reales), el comentario y quién lo dijo -->
-                <div class="testimonial-card">
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <p class="testimonial-text">
-                        "La torta de cumpleaños que pedí superó todas mis expectativas. ¡Deliciosa y hermosa!"
-                    </p>
-                    <div class="testimonial-author">
-                        <strong>María González</strong>
-                        <span>Cliente Frecuente</span>
-                    </div>
-                </div>
-
-                <div class="testimonial-card">
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <p class="testimonial-text">
-                        "Los cupcakes son increíbles. Perfectos para eventos corporativos. Muy recomendados."
-                    </p>
-                    <div class="testimonial-author">
-                        <strong>Carlos Ramírez</strong>
-                        <span>Empresario</span>
-                    </div>
-                </div>
-
-                <div class="testimonial-card">
-                    <div class="stars">
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                        <i class="fas fa-star"></i>
-                    </div>
-                    <p class="testimonial-text">
-                        "Excelente servicio y productos de calidad. Mi familia quedó encantada con el cheesecake."
-                    </p>
-                    <div class="testimonial-author">
-                        <strong>Liliana Ascanio</strong>
-                        <span>Ama de Casa</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
 
     <!-- Sección de Contacto: Información vital para comunicarse, horarios y redes sociales de Mai Shop -->
     <section class="contact" id="contacto">
@@ -506,10 +412,7 @@
         </div>
     </footer>
 
-    <!-- Botón Flotante de WhatsApp: Un icono verde circular que "persigue" al usuario sin importar donde haga scroll -->
-    <a href="https://wa.me/573244917185?text=Hola%20Mai,%20quiero%20información" class="whatsapp-float" target="_blank">
-        <i class="fab fa-whatsapp"></i>
-    </a>
+
 
     <!-- Botón Volver Arriba: Emerge cuando el usuario baja mucho y le permite regresar al cabezote con un solo clic -->
     <button class="scroll-top" id="scrollTop">

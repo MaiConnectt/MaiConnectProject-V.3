@@ -183,6 +183,7 @@ $pageTitle = 'Mi Dashboard';
                         </a>
                     </div>
                 <?php else: ?>
+                    <div class="table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
@@ -215,6 +216,7 @@ $pageTitle = 'Mi Dashboard';
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                    </div>
                 <?php endif; ?>
             </div>
 <?php include __DIR__ . '/includes/footer.php'; ?>

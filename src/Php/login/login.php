@@ -7,6 +7,14 @@
  *            sistema y crea las variables de sesión pertinentes.
  * ===================================================================
  */
+// Configurar seguridad de la cookie de sesión ANTES de iniciarla
+session_set_cookie_params([
+    'lifetime' => 0,               // Expira al cerrar el navegador
+    'path' => '/',                 // Disponible en todo el dominio
+    'secure' => isset($_SERVER['HTTPS']), // Solo por HTTPS si está disponible
+    'httponly' => true,            // 🛡️ Previene acceso a la cookie desde JavaScript (XSS)
+    'samesite' => 'Lax'            // 🛡️ Previene envío de cookies en peticiones cruzadas maliciosas (CSRF)
+]);
 session_start();
 require_once __DIR__ . '/../config/conexion.php';
 

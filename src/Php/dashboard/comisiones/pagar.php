@@ -110,6 +110,7 @@ require_once __DIR__ . '/../includes/head.php';
                     <?php if (empty($orders)): ?>
                         <p>No hay pedidos pendientes para este vendedor.</p>
                     <?php else: ?>
+                        <div class="table-responsive">
                         <table class="data-table">
                             <thead>
                                 <tr>
@@ -132,6 +133,7 @@ require_once __DIR__ . '/../includes/head.php';
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
+                        </div>
                     <?php endif; ?>
                 </div>
 

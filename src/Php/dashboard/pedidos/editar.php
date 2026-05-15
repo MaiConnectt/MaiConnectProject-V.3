@@ -198,6 +198,7 @@ include __DIR__ . '/../includes/sidebar.php';
                             <i class="fas fa-cookie-bite"></i> Productos
                         </h2>
 
+                        <div class="table-responsive">
                         <table class="products-table" id="productsTable">
                             <thead>
                                 <tr>
@@ -234,6 +235,7 @@ include __DIR__ . '/../includes/sidebar.php';
                                 <?php endforeach; ?>
                             </tbody>
                         </table>
+                        </div>
 
                         <button type="button" class="btn-add-product" id="addProductBtn">
                             <i class="fas fa-plus"></i> Agregar Producto

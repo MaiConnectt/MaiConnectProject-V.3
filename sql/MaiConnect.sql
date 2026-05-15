@@ -297,17 +297,7 @@ $$ LANGUAGE plpgsql;
 CREATE TRIGGER trg_usuario_actualizado BEFORE UPDATE ON tbl_usuario FOR EACH ROW EXECUTE FUNCTION actualizar_fecha_modificacion();
 CREATE TRIGGER trg_producto_actualizado BEFORE UPDATE ON tbl_producto FOR EACH ROW EXECUTE FUNCTION actualizar_fecha_modificacion();
 
-CREATE OR REPLACE FUNCTION registrar_cambio_estado_pedido() RETURNS TRIGGER AS $$
-DECLARE v_next_id INTEGER;
-BEGIN
-    IF OLD.estado IS DISTINCT FROM NEW.estado THEN
-        INSERT INTO tbl_historial_pedido (id_pedido, estado_anterior, estado_nuevo, motivo)
-        VALUES (NEW.id_pedido, OLD.estado, NEW.estado, 'Cambio automático');
-    END IF;
-    RETURN NEW;
-END; $$ LANGUAGE plpgsql;
 
-CREATE TRIGGER trg_pedido_cambio_estado AFTER UPDATE ON tbl_pedido FOR EACH ROW EXECUTE FUNCTION registrar_cambio_estado_pedido();
 
 CREATE OR REPLACE FUNCTION calcular_comision_pedido() RETURNS TRIGGER AS $$
 DECLARE v_total DECIMAL(10,2); v_porc DECIMAL(5,2);

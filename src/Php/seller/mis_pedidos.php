@@ -115,6 +115,7 @@ $pageTitle = 'Mis Pedidos';
                                 class="fas fa-plus"></i> Crear Pedido</a>
                     </div>
                 <?php else: ?>
+                    <div class="table-responsive">
                     <table class="table">
                         <thead>
                             <tr>
@@ -200,6 +201,7 @@ $pageTitle = 'Mis Pedidos';
                             <?php endforeach; ?>
                         </tbody>
                     </table>
+                    </div>
 
                     <?php if ($total_pages > 1): ?>
                         <div style="display: flex; justify-content: center; gap: 0.5rem; margin-top: 2rem;">

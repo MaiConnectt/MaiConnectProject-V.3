@@ -60,17 +60,20 @@ try {
     $env_arr = [];
     foreach (file(realpath(__DIR__ . '/../../../.env'), FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $l) {
         $l = trim($l);
-        if ($l === '' || $l[0] === '#' || $l[0] === ';') continue;
-        $p = strpos($l, '='); if ($p === false) continue;
+        if ($l === '' || $l[0] === '#' || $l[0] === ';')
+            continue;
+        $p = strpos($l, '=');
+        if ($p === false)
+            continue;
         $env_arr[trim(substr($l, 0, $p))] = trim(substr($l, $p + 1));
     }
     $jwt_secret = $env_arr['JWT_SECRET'];
 
     $now = time();
     $payload = [
-        'iss'        => 'MaiShop',                 // Emisor
-        'iat'        => $now,                       // Emitido en
-        'exp'        => $now + (15 * 60),           // Expira en 15 minutos
+        'iss' => 'MaiShop',                 // Emisor
+        'iat' => $now,                       // Emitido en
+        'exp' => $now + (15 * 60),           // Expira en 15 minutos
         'id_usuario' => $usuario['id_usuario'],     // ID del usuario embebido en el token
     ];
 
@@ -80,8 +83,8 @@ try {
     // PASO 3: Construir el enlace absoluto de restablecimiento
     // Detecta protocolo y host automáticamente (funciona en local y producción)
     // -------------------------------------------------------
-    $protocol   = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
-    $host       = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
     $reset_link = $protocol . '://' . $host . BASE_URL . '/src/Php/login/nueva_contrasena.php?token=' . urlencode($token);
 
     // -------------------------------------------------------
@@ -90,13 +93,13 @@ try {
     $mail = new PHPMailer(true);
 
     $mail->isSMTP();
-    $mail->Host       = 'smtp.gmail.com';
-    $mail->SMTPAuth   = true;
-    $mail->Username   = $env_arr['MAIL_FROM'];
-    $mail->Password   = $env_arr['MAIL_PASSWORD'];
+    $mail->Host = 'smtp.gmail.com';
+    $mail->SMTPAuth = true;
+    $mail->Username = $env_arr['MAIL_FROM'];
+    $mail->Password = $env_arr['MAIL_PASSWORD'];
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
-    $mail->Port       = 587;
-    $mail->CharSet    = 'UTF-8';
+    $mail->Port = 587;
+    $mail->CharSet = 'UTF-8';
 
     // Remitente y destinatario
     $mail->setFrom($env_arr['MAIL_FROM'], $env_arr['MAIL_FROM_NAME']);

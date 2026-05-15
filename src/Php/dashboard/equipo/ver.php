@@ -251,6 +251,7 @@ require_once __DIR__ . '/../includes/head.php';
         </div>
 
         <div style="overflow-x:auto;">
+            <div class="table-responsive">
             <table style="width:100%; border-collapse:collapse;">
                 <thead>
                     <tr style="background:#fdf8f9;">
@@ -304,6 +305,7 @@ require_once __DIR__ . '/../includes/head.php';
                     <?php endif; ?>
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 

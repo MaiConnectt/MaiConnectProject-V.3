@@ -197,6 +197,7 @@ require_once __DIR__ . '/../includes/head.php';
 
         <div style="overflow-x:auto;">
             <?php if ($active_tab === 'pending'): ?>
+            <div class="table-responsive">
             <table style="width:100%; border-collapse:collapse;">
                 <thead>
                     <tr style="background:#fdf8f9;">
@@ -276,9 +277,11 @@ require_once __DIR__ . '/../includes/head.php';
                     <?php endif; ?>
                 </tbody>
             </table>
+            </div>
 
             <?php else: ?>
             <!-- TABLA PAGADAS -->
+            <div class="table-responsive">
             <table style="width:100%; border-collapse:collapse;">
                 <thead>
                     <tr style="background:#fdf8f9;">
@@ -352,6 +355,7 @@ require_once __DIR__ . '/../includes/head.php';
                     <?php endif; ?>
                 </tbody>
             </table>
+            </div>
             <?php endif; ?>
         </div>
     </div>
